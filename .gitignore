@@ -1,5 +1,5 @@
-# Gitpod and Docker Files
-.gitpod
-Dockerfile
-*/.cpython
-*/__pycache__
+test.out
+
+logic.out
+
+a.out
