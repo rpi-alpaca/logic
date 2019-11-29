@@ -1,8 +1,0 @@
-image:
-  file: Dockerfile
-ports:
-  - port: 6080
-    protocol: "http"
-tasks:
-  - command: "python3 -m pip install --upgrade pip wheel setuptools virtualenv"
-  - command: "python3 -m pip install kivy==1.11.1"
