@@ -32,8 +32,8 @@ int main(int argc, char* argv[]) {
 	return 0;
 }
 
-void statementParserTest(){
-	std::cout << "RUNNING STATEMENTPARSERTEST\n\n";
+void statementParserTest() {
+	std::cout << "RUNNING STATEMENTPARSERTEST" << std::endl << std::endl;
 
 	StatementParser state1;
 	StatementParser state2;
@@ -44,13 +44,10 @@ void statementParserTest(){
 	state1.print();
 	state2.print();
 	combined.print();
-
-
-
 }
 
-void statementEvaluatorTest(){
-	std::cout << "RUNNING STATEMENTEVALUATORTEST\n\n";
+void statementEvaluatorTest() {
+	std::cout << "RUNNING STATEMENTEVALUATORTEST" << std::endl << std::endl;
 
 	StatementParser state1;
 	StatementParser state2;
@@ -59,10 +56,10 @@ void statementEvaluatorTest(){
 	StatementParser combined(state1, state2);
 
 	std::vector<std::string> variables;
-	variables.push_back("The sky is blue");
-	variables.push_back("Hali's shirt is blue");
+	variables.emplace_back("The sky is blue");
+	variables.emplace_back("Hali's shirt is blue");
 
-	//Testing printTruthTable and evaluateStatement
+	// Testing printTruthTable and evaluateStatement
 	StatementEvaluator eval;
 	eval.printTruthTable(combined, variables);
 }

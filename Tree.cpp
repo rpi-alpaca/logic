@@ -83,9 +83,8 @@ StatementNode* StatementParser::copy_statement(StatementNode* old_node) {
 // Assumes statement is of format ((A) & (B)) & (~C)
 void StatementParser::parseStatement(StatementNode* n, const std::string& statement){
 	int parenCount = 0;
-	unsigned int i;
 
-	//If there is a negation character, negate the current head node and recurse
+	// If there is a negation character, negate the current head node and recurse
 	if (statement[0] == '~') {
 		n->negation = !(n->negation);
 		//If there's no parenthesis after, statement is basic
@@ -107,8 +106,9 @@ void StatementParser::parseStatement(StatementNode* n, const std::string& statem
 		return;
 	}
 
-	std::string subStatementL = "";
-	//Evaluates the left
+	std::string subStatementL;
+    std::string::size_type i;
+	// Evaluates the left
 	for (i = 0; i < statement.size(); i++) {
 		if (statement[i] == '(')
 			parenCount++;
@@ -116,7 +116,6 @@ void StatementParser::parseStatement(StatementNode* n, const std::string& statem
 			parenCount--;
 		//parenCount == zero suggests a fully closed statement
 		if (parenCount == 0) {
-
 			//subStatementL is the inner statement without parentheses
 			subStatementL = statement.substr(1, i-1);
 			break;
@@ -136,11 +135,11 @@ void StatementParser::parseStatement(StatementNode* n, const std::string& statem
 	n->right = new StatementNode();
 
 	//Changes conditional A -> B to ~A | B
-	if(n->opType == '>'){
+	if (n->opType == '>') {
 		n->left->negation = !(n->left->negation);
 		n->opType = '|';
 	}
-	if(n->opType == '='){
+	if (n->opType == '=') {
 		std::string newLeft = "(" + subStatementL + ") & (" + subStatementR + ")";
 		std::string newRight = "(~(" + subStatementL + ")) & (~(" + subStatementR + "))";
 		n->opType = '|';

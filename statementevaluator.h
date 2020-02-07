@@ -8,18 +8,18 @@
 #include <vector>
 #include <iomanip>
 
-class StatementEvaluator{
+class StatementEvaluator {
 	public:
 		bool evaluateStatement(const StatementParser& s, const std::vector<std::pair<std::string, bool> >& variableTruthValues) const;
 		void printTruthTable(const StatementParser& s, const std::vector<std::string>& variableNames) const;
 		bool areLogicallyEquivalent(const StatementParser& s1, const StatementParser& s2) const;
 
 	private:
-		//Mapping of operation characters to the corresponding functions.
+		// Mapping of operation characters to the corresponding functions.
 		std::unordered_map<char, std::function<bool (bool, bool)> > functionMap = {
-			{'|', [](bool p, bool q){return p || q;}},
-			{'&', [](bool p, bool q){return p && q;}},
-			{'@', [](bool p, bool q){return p xor q;}}
+			{'|', [](bool p, bool q) {return p || q;}},
+			{'&', [](bool p, bool q) {return p && q;}},
+			{'@', [](bool p, bool q) {return p xor q;}}
 		};
 
 		bool evaluateBranch(StatementNode* p, const std::unordered_map<std::string, bool>& variableValues) const;

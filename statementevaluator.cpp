@@ -6,11 +6,11 @@
  *			 variableTruthValues contains a vector of pairs where the first value is variable name and second is boolean 
  * Returns: A boolean indicating whether the statement is true given the provided variable boolean values
  */
-bool StatementEvaluator::evaluateStatement(const StatementParser& s, const std::vector<std::pair<std::string, bool> >& variableTruthValues) const{
+bool StatementEvaluator::evaluateStatement(const StatementParser& s, const std::vector<std::pair<std::string, bool> >& variableTruthValues) const {
 	//Creates a hash table from variable names to boolean value
 	std::unordered_map<std::string, bool> variableValues;
-	for(unsigned int i = 0; i < variableTruthValues.size(); i++){
-		variableValues[variableTruthValues[i].first] = variableTruthValues[i].second;
+	for (const auto & variableTruthValue : variableTruthValues) {
+		variableValues[variableTruthValue.first] = variableTruthValue.second;
 	}
 
 	bool isTrue = evaluateBranch(s.head, variableValues);
@@ -23,13 +23,13 @@ bool StatementEvaluator::evaluateStatement(const StatementParser& s, const std::
  * Effects: Prints a truth table
  * Returns: Nothing
  */
-void StatementEvaluator::printTruthTable(const StatementParser& s, const std::vector<std::string>& variableNames) const{
+void StatementEvaluator::printTruthTable(const StatementParser& s, const std::vector<std::string>& variableNames) const {
 	unsigned int maxStringSize = 0;
 	std::vector<std::pair<std::string, bool> > variableTruthValues;
-	for(unsigned int i = 0; i < variableNames.size(); i++){
-		variableTruthValues.push_back(std::make_pair(variableNames[i], true));
-		if(maxStringSize < variableNames[i].size())
-			maxStringSize = variableNames[i].size();
+	for (const auto & variableName : variableNames) {
+		variableTruthValues.emplace_back(variableName, true);
+		if (maxStringSize < variableName.size())
+			maxStringSize = variableName.size();
 	}
 
 	printVariableHeaders(variableNames, maxStringSize);
@@ -43,7 +43,7 @@ void StatementEvaluator::printTruthTable(const StatementParser& s, const std::ve
  * Effects: Nothing
  * Returns: True if s1, s2 are logically equivalent. Otherwise, false.
  */
-bool StatementEvaluator::areLogicallyEquivalent(const StatementParser& s1, const StatementParser& s2) const{
+bool StatementEvaluator::areLogicallyEquivalent(const StatementParser& s1, const StatementParser& s2) const {
 
 }
 
@@ -67,26 +67,24 @@ bool StatementEvaluator::areLogicallyEquivalent(const StatementParser& s1, const
 
 
 //PRIVATE: Helper function for evaluateStatement
-bool StatementEvaluator::evaluateBranch(StatementNode* p, const std::unordered_map<std::string, bool>& variableValues) const{
+bool StatementEvaluator::evaluateBranch(StatementNode* p, const std::unordered_map<std::string, bool>& variableValues) const {
 	bool notDetected = true;
 	//Node is a not statement
-	if(p -> negation == false){
+	if (!p->negation) {
 		notDetected = false;
 	}
 
 	//Node is not an operation (variable)
-	if(p -> opType == 'v' && !notDetected){
-		return variableValues.find(p -> value) -> second;
-	}
-	else if(p -> opType == 'v' && notDetected){
-		return !variableValues.find(p -> value) -> second;
+	if (p -> opType == 'v' && !notDetected) {
+		return variableValues.find(p -> value)->second;
+	} else if (p -> opType == 'v' && notDetected) {
+		return !variableValues.find(p -> value)->second;
 	}
 	//Node is an operation
-	else if(!notDetected){
+	else if (!notDetected) {
 		std::function<bool(bool,bool)> operation = functionMap.find(p -> opType) -> second;
 		return operation(evaluateBranch(p -> left, variableValues), evaluateBranch(p-> right, variableValues));
-	}
-	else{
+	} else {
 		std::function<bool(bool,bool)> operation = functionMap.find(p -> opType) -> second;
 		return !operation(evaluateBranch(p -> left, variableValues), evaluateBranch(p-> right, variableValues));
 	}
@@ -95,14 +93,13 @@ bool StatementEvaluator::evaluateBranch(StatementNode* p, const std::unordered_m
 
 
 //PRIVATE: Helper function for printTruthTable
-void StatementEvaluator::recurseDownArray(const StatementParser& s, std::vector<std::pair<std::string, bool> >& variableTruthValues, unsigned int index, unsigned int maxStringSize) const{
-	if(index == variableTruthValues.size()){
-		for(unsigned int i = 0; i < variableTruthValues.size(); i++){
-			std::cout << std::setw(maxStringSize) << std::boolalpha << std::left << variableTruthValues[i].second << " ";
+void StatementEvaluator::recurseDownArray(const StatementParser& s, std::vector<std::pair<std::string, bool> >& variableTruthValues, unsigned int index, unsigned int maxStringSize) const {
+	if (index == variableTruthValues.size()) {
+		for (auto & variableTruthValue : variableTruthValues) {
+			std::cout << std::setw(maxStringSize) << std::boolalpha << std::left << variableTruthValue.second << " ";
 		}
-		std::cout << evaluateStatement(s, variableTruthValues) << "\n";
-	}
-	else{
+		std::cout << evaluateStatement(s, variableTruthValues) << std::endl;
+	} else {
 		recurseDownArray(s, variableTruthValues, index + 1, maxStringSize);
 		variableTruthValues[index].second = false;
 		recurseDownArray(s, variableTruthValues, index + 1, maxStringSize);
@@ -110,11 +107,10 @@ void StatementEvaluator::recurseDownArray(const StatementParser& s, std::vector<
 	}
 }
 
-
 //PRIVATE: Helper function that prints all strings in an array formatted using iomanip
 void StatementEvaluator::printVariableHeaders(const std::vector<std::string>& variableNames, int maxStringSize) const{
-	for(unsigned int i = 0; i < variableNames.size(); i++){
-		std::cout << std::setw(maxStringSize) << std::left << variableNames[i] << " ";
+	for (const auto & variableName : variableNames) {
+		std::cout << std::setw(maxStringSize) << std::left << variableName << " ";
 	}
-	std::cout << "\n";
+	std::cout << std::endl;
 }

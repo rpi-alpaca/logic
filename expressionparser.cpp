@@ -4,29 +4,32 @@
 #include <stack>
 
 bool isOperator(char token) {
-    if (token == '&' 
-        || token == '|' 
-        || token == '@'
-        || token == '(' 
-        || token == ')') {
-        return true;
-    }
-    return false;
+    return token == '&'
+           || token == '|'
+           || token == '@'
+           || token == '('
+           || token == ')';
 }
+
 int precedence(char op) {
-    if (op == '(' || op == ')') {return 0;}
-    if (op == '&') {
-        return 3;
+    switch (op) {
+        case '(':
+        case ')':
+            return 0;
+        case '&':
+            return 3;
+        case '|':
+        case '@':
+            return 2;
+        default:
+            return -1; // temp
     }
-    if (op == '|' || op == '@') {
-        return 2;
-    }
-    return -1; //temp
 }
+
 std::string read_token(std::string str) {
     std::queue<char> outQ;
     std::stack<char> opS;
-    while (str.size()) {
+    while (!str.empty()) {
         char token = str[0];
         str = str.substr(1, str.size());
         if (std::isalpha(token)) {
@@ -53,17 +56,18 @@ std::string read_token(std::string str) {
             }
         }
     }
-    while (opS.size() != 0) {
+    while (!opS.empty()) {
         outQ.push(opS.top());
         opS.pop();
     }
     std::string outS;
-    while (outQ.size() != 0) {
+    while (!outQ.empty()) {
         outS += outQ.front();
         outQ.pop();
     }
     return outS; //temp
 }
+
 bool calculate(std::string input) {
 	return false; //temp;
 }
