@@ -47,24 +47,6 @@ bool StatementEvaluator::areLogicallyEquivalent(const StatementParser& s1, const
 
 }
 
-//PRIVATE: Helper function for evaluateStatement
-/*bool StatementEvaluator::evaluateBranch(StatementNode* p, const std::unordered_map<std::string, bool>& variableValues) const{
-	//Node is not an operation (variable)
-	if(p -> opType == 'v'){
-		return variableValues.find(p -> value) -> second;
-	} 
-	//Node is a not statement
-	else if(p -> opType == '~'){
-		return !evaluateBranch(p -> left, variableValues);
-	}
-	//Node is a non-not operation
-	else{
-		std::function<bool(bool,bool)> operation = functionMap.find(p -> opType) -> second;
-		return operation(evaluateBranch(p -> left, variableValues), evaluateBranch(p-> right, variableValues));
-	}
-	return true;
-}*/
-
 
 //PRIVATE: Helper function for evaluateStatement
 bool StatementEvaluator::evaluateBranch(StatementNode* p, const std::unordered_map<std::string, bool>& variableValues) const {
