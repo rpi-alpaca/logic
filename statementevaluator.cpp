@@ -1,10 +1,12 @@
 
 #include "statementevaluator.h"
 
-/* evaluateStatement
- * Requires: s is a valid StatementParser and is created correctly
- *			 variableTruthValues contains a vector of pairs where the first value is variable name and second is boolean 
- * Returns: A boolean indicating whether the statement is true given the provided variable boolean values
+/* evaluateStatement accepts a StatementParser (which represents a logical statement) and a vector of 
+   <variablename, boolean> values. The vector of pairs represents the boolean values assigned to each 
+   variable.
+
+   The function creates a hash table using the vector passed in and calls evaluateBranch to evaluate the statement
+   with those values. 
  */
 bool StatementEvaluator::evaluateStatement(const StatementParser& s, const std::vector<std::pair<std::string, bool> >& variableTruthValues) const {
 	//Creates a hash table from variable names to boolean value
@@ -18,10 +20,11 @@ bool StatementEvaluator::evaluateStatement(const StatementParser& s, const std::
 }
 
 
-/* printTruthTable
- * Requires: s is a valid StatementParser and is created correctly, variableNames is a vector containing all of the variable names in s
- * Effects: Prints a truth table
- * Returns: Nothing
+/* printTruthTable accepts a StatementParser (logical statement) and a vector containing all the variable names
+   in that StatementParser.
+
+   It prints out a truth table containing the evaluation of the statement for all possible boolean assignments
+   for the variables.
  */
 void StatementEvaluator::printTruthTable(const StatementParser& s, const std::vector<std::string>& variableNames) const {
 	unsigned int maxStringSize = 0;
@@ -37,42 +40,13 @@ void StatementEvaluator::printTruthTable(const StatementParser& s, const std::ve
 	recurseDownArray(s, variableTruthValues, 0, maxStringSize);
 }
 
-
-/* areLogicallyEquivalent
- * Requires: s1, s2 are non-null
- * Effects: Nothing
- * Returns: True if s1, s2 are logically equivalent. Otherwise, false.
- */
-bool StatementEvaluator::areLogicallyEquivalent(const StatementParser& s1, const StatementParser& s2) const {
-
+//PRIVATE: Helper function that prints all strings in an array formatted using iomanip
+void StatementEvaluator::printVariableHeaders(const std::vector<std::string>& variableNames, int maxStringSize) const{
+	for (const auto & variableName : variableNames) {
+		std::cout << std::setw(maxStringSize) << std::left << variableName << " ";
+	}
+	std::cout << std::endl;
 }
-
-
-//PRIVATE: Helper function for evaluateStatement
-bool StatementEvaluator::evaluateBranch(StatementNode* p, const std::unordered_map<std::string, bool>& variableValues) const {
-	bool notDetected = true;
-	//Node is a not statement
-	if (!p->negation) {
-		notDetected = false;
-	}
-
-	//Node is not an operation (variable)
-	if (p -> opType == 'v' && !notDetected) {
-		return variableValues.find(p -> value)->second;
-	} else if (p -> opType == 'v' && notDetected) {
-		return !variableValues.find(p -> value)->second;
-	}
-	//Node is an operation
-	else if (!notDetected) {
-		std::function<bool(bool,bool)> operation = functionMap.find(p -> opType) -> second;
-		return operation(evaluateBranch(p -> left, variableValues), evaluateBranch(p-> right, variableValues));
-	} else {
-		std::function<bool(bool,bool)> operation = functionMap.find(p -> opType) -> second;
-		return !operation(evaluateBranch(p -> left, variableValues), evaluateBranch(p-> right, variableValues));
-	}
-	return true;
-}
-
 
 //PRIVATE: Helper function for printTruthTable
 void StatementEvaluator::recurseDownArray(const StatementParser& s, std::vector<std::pair<std::string, bool> >& variableTruthValues, unsigned int index, unsigned int maxStringSize) const {
@@ -89,10 +63,43 @@ void StatementEvaluator::recurseDownArray(const StatementParser& s, std::vector<
 	}
 }
 
-//PRIVATE: Helper function that prints all strings in an array formatted using iomanip
-void StatementEvaluator::printVariableHeaders(const std::vector<std::string>& variableNames, int maxStringSize) const{
-	for (const auto & variableName : variableNames) {
-		std::cout << std::setw(maxStringSize) << std::left << variableName << " ";
+
+/* areLogicallyEquivalent
+ * Requires: s1, s2 are non-null
+ * Effects: Nothing
+ * Returns: True if s1, s2 are logically equivalent. Otherwise, false.
+ */
+bool StatementEvaluator::areLogicallyEquivalent(const StatementParser& s1, const StatementParser& s2) const {
+
+}
+
+
+/* evaluateBranch is a private function that takes a node to the head of a StatementParser and evaluates the
+   statement for the variable-boolean assignment inside of variableValues. 
+ */
+bool StatementEvaluator::evaluateBranch(StatementNode* p, const std::unordered_map<std::string, bool>& variableValues) const {
+	bool notDetected = true;
+	//Node is a not statement: Negates the value that would have been returned
+	if (!p->negation) {
+		notDetected = false;
 	}
-	std::cout << std::endl;
+
+	//Node is not an operation (variable): returns the value of that variable (found in variableValues)
+	if (p -> opType == 'v' && !notDetected) {
+		return variableValues.find(p -> value)->second;
+	} else if (p -> opType == 'v' && notDetected) {
+		return !variableValues.find(p -> value)->second;
+	}
+
+	//Node is an operation: Looks for the appropriate operation in functionMap and recurses.
+	else if (!notDetected) {
+		std::function<bool(bool,bool)> operation = functionMap.find(p -> opType) -> second;
+		return operation(evaluateBranch(p -> left, variableValues), evaluateBranch(p-> right, variableValues));
+	} else {
+		std::function<bool(bool,bool)> operation = functionMap.find(p -> opType) -> second;
+		return !operation(evaluateBranch(p -> left, variableValues), evaluateBranch(p-> right, variableValues));
+	}
+
+	//DEFAULT return value: Shouldn't reach here.
+	return true;
 }

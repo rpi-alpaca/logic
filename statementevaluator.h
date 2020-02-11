@@ -8,6 +8,14 @@
 #include <vector>
 #include <iomanip>
 
+/* This class contains functions to print and evaluate a StatementParser that is passed in. 
+   The only member data of the class includes a hash table to find a corresponding operator quickly
+   although this is largely unnecessary. 
+
+   evaluateStatement evaluates the value of the StatementParser for a list of pairs of <variable_name, boolean>.
+   printTruthTable prints the evaluation of the StatementParser for every possible boolean assignment to its variables.
+*/
+
 class StatementEvaluator {
 	public:
 		bool evaluateStatement(const StatementParser& s, const std::vector<std::pair<std::string, bool> >& variableTruthValues) const;
