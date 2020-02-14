@@ -3,6 +3,7 @@
 #include <queue>
 #include <stack>
 #include <iostream>
+#include <stdlib.h>
 using namespace std;
 
 bool isOperator(char token) {
@@ -29,14 +30,21 @@ int precedence(char op) {
 }
 
 std::string read_token(std::string str) {
+    // Output Queue
     std::queue<char> outQ;
+    // Operator Stack
     std::stack<char> opS;
+    // While there are more tokens to be read
     while (!str.empty()) {
+        // Read the token
         char token = str[0];
         str = str.substr(1, str.size());
+        // If the token is an atomic statement
         if (std::isalpha(token)) {
+            // Push it to the output queue
             outQ.push(token);
         }
+        // If the token is an operator
         if (isOperator(token)) {
             while ((precedence(opS.top()) >= precedence(token)) && (opS.top() != '(')) {
                 outQ.push(opS.top());
@@ -75,7 +83,7 @@ bool calculate(std::string input) {
 }
 
 int main(int argc, char** argv){
-    if(argc < 2){
+    if(argc < 1){
         return EXIT_FAILURE;
     }
     cout << read_token("(A & B) | C") << endl;
