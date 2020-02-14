@@ -107,7 +107,7 @@ void StatementParser::parseStatement(StatementNode* n, const std::string& statem
 	}
 
 	std::string subStatementL;
-    std::string::size_type i;
+	std::string::size_type i;
 	// Evaluates the left
 	for (i = 0; i < statement.size(); i++) {
 		if (statement[i] == '(')
