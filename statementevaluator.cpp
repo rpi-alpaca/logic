@@ -40,7 +40,8 @@ void StatementEvaluator::printTruthTable(const StatementParser& s, const std::ve
 	recurseDownArray(s, variableTruthValues, 0, maxStringSize);
 }
 
-//PRIVATE: Helper function that prints all strings in an array formatted using iomanip
+/* printVariableHeaders is a private function that prints all strings in a vector formatted using iomanip
+   By default, each column is of size maxStringSize */
 void StatementEvaluator::printVariableHeaders(const std::vector<std::string>& variableNames, int maxStringSize) const{
 	for (const auto & variableName : variableNames) {
 		std::cout << std::setw(maxStringSize) << std::left << variableName << " ";
@@ -48,7 +49,12 @@ void StatementEvaluator::printVariableHeaders(const std::vector<std::string>& va
 	std::cout << std::endl;
 }
 
-//PRIVATE: Helper function for printTruthTable
+/* recurseDownArray is a private function which accepts a StatementParser and a vector with <string, bool> pairs, 
+   representing variable-truth value pairs. When called, the bool argument of these pairs should be true.
+
+   It uses recursion to print out all possible boolean assignments, formatted with iomanip with columns of size
+   maxStringSize. 
+ */
 void StatementEvaluator::recurseDownArray(const StatementParser& s, std::vector<std::pair<std::string, bool> >& variableTruthValues, unsigned int index, unsigned int maxStringSize) const {
 	if (index == variableTruthValues.size()) {
 		for (auto & variableTruthValue : variableTruthValues) {
@@ -70,7 +76,7 @@ void StatementEvaluator::recurseDownArray(const StatementParser& s, std::vector<
  * Returns: True if s1, s2 are logically equivalent. Otherwise, false.
  */
 bool StatementEvaluator::areLogicallyEquivalent(const StatementParser& s1, const StatementParser& s2) const {
-
+	// NOT IMPLEMENTED
 }
 
 
@@ -79,19 +85,19 @@ bool StatementEvaluator::areLogicallyEquivalent(const StatementParser& s1, const
  */
 bool StatementEvaluator::evaluateBranch(StatementNode* p, const std::unordered_map<std::string, bool>& variableValues) const {
 	bool notDetected = true;
-	//Node is a not statement: Negates the value that would have been returned
+	// Node is a not statement: Negates the value that would have been returned
 	if (!p->negation) {
 		notDetected = false;
 	}
 
-	//Node is not an operation (variable): returns the value of that variable (found in variableValues)
+	// Node is not an operation (variable): returns the value of that variable (found in variableValues)
 	if (p -> opType == 'v' && !notDetected) {
 		return variableValues.find(p -> value)->second;
 	} else if (p -> opType == 'v' && notDetected) {
 		return !variableValues.find(p -> value)->second;
 	}
 
-	//Node is an operation: Looks for the appropriate operation in functionMap and recurses.
+	// Node is an operation: Looks for the appropriate operation in functionMap and recurses.
 	else if (!notDetected) {
 		std::function<bool(bool,bool)> operation = functionMap.find(p -> opType) -> second;
 		return operation(evaluateBranch(p -> left, variableValues), evaluateBranch(p-> right, variableValues));
@@ -100,6 +106,6 @@ bool StatementEvaluator::evaluateBranch(StatementNode* p, const std::unordered_m
 		return !operation(evaluateBranch(p -> left, variableValues), evaluateBranch(p-> right, variableValues));
 	}
 
-	//DEFAULT return value: Shouldn't reach here.
+	// DEFAULT return value: Shouldn't reach here.
 	return true;
 }
