@@ -2,6 +2,8 @@
 #include <string>
 #include <queue>
 #include <stack>
+#include <iostream>
+using namespace std;
 
 bool isOperator(char token) {
     return token == '&'
@@ -70,4 +72,12 @@ std::string read_token(std::string str) {
 
 bool calculate(std::string input) {
 	return false; //temp;
+}
+
+int main(int argc, char** argv){
+    if(argc < 2){
+        return EXIT_FAILURE;
+    }
+    cout << read_token("(A & B) | C") << endl;
+    return EXIT_SUCCESS;
 }
