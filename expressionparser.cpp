@@ -46,7 +46,11 @@ std::string read_token(std::string str) {
         }
         // If the token is an operator
         if (isOperator(token)) {
-            while ((precedence(opS.top()) >= precedence(token)) && (opS.top() != '(')) {
+            if(opS.empty()){
+                opS.push(token);
+            }
+            else{
+                while ((precedence(opS.top()) >= precedence(token)) && (opS.top() != '(')) {
                 outQ.push(opS.top());
                 opS.pop();
                 opS.push(token);
