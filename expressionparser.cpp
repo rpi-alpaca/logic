@@ -51,9 +51,10 @@ std::string read_token(std::string str) {
             }
             else{
                 while ((precedence(opS.top()) >= precedence(token)) && (opS.top() != '(')) {
-                outQ.push(opS.top());
-                opS.pop();
-                opS.push(token);
+                    outQ.push(opS.top());
+                    opS.pop();
+                    opS.push(token);
+                }   
             }
         }
         if (opS.top() == '(') {
