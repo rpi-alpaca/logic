@@ -7,84 +7,76 @@
 using namespace std;
 
 bool isOperator(char token) {
-    return token == '&'
-           || token == '|'
-           || token == '@'
-           || token == '('
-           || token == ')';
+    return (token == '&' || token == '|');
 }
 
-int precedence(char op) {
-    switch (op) {
-        case '(':
-        case ')':
-            return 0;
+int precedence(char currentOperator) {
+    switch(currentOperator) {
         case '&':
             return 3;
         case '|':
-        case '@':
             return 2;
         default:
-            return -1; // temp
+            return -1;
     }
 }
 
-std::string read_token(std::string str) {
-    // Output Queue
-    std::queue<char> outQ;
-    // Operator Stack
-    std::stack<char> opS;
-    // While there are more tokens to be read
-    while (!str.empty()) {
-        // Read the token
+string read_token(string str) {
+    //Output Queue
+    queue<char> outQueue;
+    //Operator Stack
+    stack<char> opStack;
+    //While There Are More Tokens:
+    while(!str.empty()) {
+        cout << "Eneted" << endl;
+        //Read Current Token:
         char token = str[0];
         str = str.substr(1, str.size());
-        // If the token is an atomic statement
-        if (std::isalpha(token)) {
-            // Push it to the output queue
-            outQ.push(token);
+        //Case 1: Atomic Statement
+        if(isalpha(token)) {
+            //Push it to the output queue
+            outQueue.push(token);
         }
-        // If the token is an operator
-        if (isOperator(token)) {
-            if(opS.empty()){
-                opS.push(token);
+        //If the token is an operator
+        if(isOperator(token)) {
+            while(!opStack.empty() 
+                    && (precedence(opStack.top()) >= precedence(token)) 
+                    && (opStack.top() != '(')) {
+                outQueue.push(opStack.top());
+                opStack.pop();
             }
-            else{
-                while ((precedence(opS.top()) >= precedence(token)) && (opS.top() != '(')) {
-                    outQ.push(opS.top());
-                    opS.pop();
-                    opS.push(token);
-                }   
-            }
+            opStack.push(token);   
         }
-        if (opS.top() == '(') {
-            opS.push(token);
+        if(!opStack.empty() && opStack.top() == '(') {
+            opStack.push(token);
         }
-        if (opS.top() == ')') {
-            while (opS.top() != '(') {
-                outQ.push(opS.top());
-                opS.pop();
+        if(!opStack.empty() && opStack.top() == ')') {
+            while(!opStack.empty() && opStack.top() != '(') {
+                outQueue.push(opStack.top());
+                opStack.pop();
             }
-            /* if the stack runs out without finding a left paren, then there are mismatched parentheses. */
-            if (opS.top() == '(') {
-                opS.pop();
+            //If the Stack Empty w/o Finding a Left Parenthesis, 
+            //then there are Mismatched Parentheses.
+            if(!opStack.empty() && opStack.top() == '(') {
+                opStack.pop();
             }
         }
     }
-    while (!opS.empty()) {
-        outQ.push(opS.top());
-        opS.pop();
+    while(!opStack.empty()) {
+        outQueue.push(opStack.top());
+        opStack.pop();
     }
-    std::string outS;
-    while (!outQ.empty()) {
-        outS += outQ.front();
-        outQ.pop();
+    string resultValue = "";
+    while(!outQueue.empty()) {
+        resultValue += outQueue.front();
+        outQueue.pop();
     }
-    return outS; //temp
+    return resultValue;
 }
 
-bool calculate(std::string input) {
-	return false; //temp;
+//Unused Method: Needs To Be Removed Immediately.
+bool calculate(string input) {
+	return false; 
 }
 
 int main(int argc, char** argv){
@@ -92,5 +84,6 @@ int main(int argc, char** argv){
         return EXIT_FAILURE;
     }
     cout << read_token("(A & B) | C") << endl;
+    //(A & B) | C 
     return EXIT_SUCCESS;
 }
