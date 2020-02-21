@@ -7,7 +7,7 @@
 using namespace std;
 
 bool isOperator(char token) {
-    return (token == '&' || token == '|');
+    return (token == '&' || token == '|' || token == '~' || token == '->' || token == '<->');
 }
 
 int precedence(char currentOperator) {
@@ -16,12 +16,18 @@ int precedence(char currentOperator) {
             return 3;
         case '|':
             return 2;
+        case '~':
+            return 1;  
+        case '->':
+            return 2;
+        case '<->':
+            return 2;
         default:
             return -1;
     }
 }
 
-string read_token(string str) {
+string runShuntingYardAlgorithm(string str) {
     //Output Queue
     queue<char> outQueue;
     //Operator Stack
@@ -83,7 +89,7 @@ int main(int argc, char** argv){
         return EXIT_FAILURE;
     }
     string inputValue(argv[1]);
-    string outputValue = read_token(inputValue);
+    string outputValue = runShuntingYardAlgorithm(inputValue);
     cout << outputValue << endl;
     //(A & B) | C 
     return EXIT_SUCCESS;
