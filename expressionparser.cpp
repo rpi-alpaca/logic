@@ -9,7 +9,9 @@ using namespace std;
 bool isOperator(char currentOperator){
     return (currentOperator == '&' 
             || currentOperator == '|' 
-            || currentOperator == '~');
+            || currentOperator == '~'
+            || currentOperator == '='
+            || currentOperator == '>');
 }
 
 char getAssociativity(char currentOperator){
@@ -17,6 +19,10 @@ char getAssociativity(char currentOperator){
         case '&':
             return 'L';
         case '|':
+            return 'L';
+        case '=':
+            return 'L';
+        case '>':
             return 'L';
         case '~':
             return 'R';  
@@ -32,11 +38,15 @@ bool isBoolean(char currentOperator){
 int getPrecedence(char currentOperator){
     switch(currentOperator){
         case '&':
-            return 1;
+            return 2;
         case '|':
+            return 1;
+        case '=':
+            return 0;
+        case '>':
             return 0;
         case '~':
-            return 4;  
+            return 4;
         default:
             return -1;
     }
