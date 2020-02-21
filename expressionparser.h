@@ -21,5 +21,6 @@ public:
 
 private:
 	string output;
+	char*[] operatorsList = {'&', '|', '~', '=', '>'};
 	
 };

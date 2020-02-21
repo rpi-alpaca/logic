@@ -135,6 +135,10 @@ string runShuntingYardAlgorithm(string inputExpression){
             }
         }
         else{
+            if(!isalpha(token)){
+                cout << "Error: Invalid Operator" << endl;
+                return "ERROR";
+            }
             outQueue.push(token);
         }
     }
