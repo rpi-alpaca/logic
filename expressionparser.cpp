@@ -6,34 +6,47 @@
 #include <stdlib.h>
 using namespace std;
 
-bool isOperator(char token) {
-    return (token == '&' || token == '|' || token == '~' || token == '/' || token == '%');
+bool isOperator(char currentOperator){
+    return (currentOperator == '&' 
+            || currentOperator == '|' 
+            || currentOperator == '~' 
+            || currentOperator == '/' 
+            || currentOperator == '%');
 }
 
-int precedence(char currentOperator) {
-    switch(currentOperator) {
+bool isLeftAssociative(char currentOperator){
+    switch(currentOperator){
         case '&':
-            return 3;
+            return true;
+        case '|':
+            return true;
+        case '~':
+            return false;  
+        default:
+            return true;
+    }
+}
+
+int precedence(char currentOperator){
+    switch(currentOperator){
+        case '&':
+            return 2;
         case '|':
             return 2;
         case '~':
-            return 1;  
-        case '/':
-            return 2;
-        case '%':
-            return 2;
+            return 4;  
         default:
             return -1;
     }
 }
 
-string runShuntingYardAlgorithm(string str) {
+string runShuntingYardAlgorithm(string str){
     //Output Queue
     queue<char> outQueue;
     //Operator Stack
     stack<char> opStack;
     //While There Are More Tokens:
-    while(!str.empty()) {
+    while(!str.empty()){
         //Read Current Token:
         char token = str[0];
         //Update Current String:
@@ -44,31 +57,33 @@ string runShuntingYardAlgorithm(string str) {
             outQueue.push(token);
         }
         //If the token is an operator
-        if(isOperator(token)) {
+        if(isOperator(token)){
             while(!opStack.empty() 
-                    && (precedence(opStack.top()) >= precedence(token)) 
-                    && (opStack.top() != '(')) {
+                    && (precedence(opStack.top()) > precedence(token)
+                        || (precedence(opStack.top()) == precedence(token) 
+                        && isLeftAssociative(token))) 
+                    && (opStack.top() != '(')){
                 outQueue.push(opStack.top());
                 opStack.pop();
             }
             opStack.push(token);   
         }
-        if(!opStack.empty() && opStack.top() == '(') {
+        if(!opStack.empty() && opStack.top() == '('){
             opStack.push(token);
         }
         if(!opStack.empty() && opStack.top() == ')') {
-            while(!opStack.empty() && opStack.top() != '(') {
+            while(!opStack.empty() && opStack.top() != '('){
                 outQueue.push(opStack.top());
                 opStack.pop();
             }
             //If the Stack Empty w/o Finding a Left Parenthesis, 
             //then there are Mismatched Parentheses.
-            if(!opStack.empty() && opStack.top() == '(') {
+            if(!opStack.empty() && opStack.top() == '('){
                 opStack.pop();
             }
         }
     }
-    while(!opStack.empty()) {
+    while(!opStack.empty()){
         outQueue.push(opStack.top());
         opStack.pop();
     }
@@ -81,7 +96,7 @@ string runShuntingYardAlgorithm(string str) {
 }
 
 //Unused Method: Needs To Be Removed Immediately.
-bool calculate(string input) {
+bool calculate(string input){
 	return false; 
 }
 
