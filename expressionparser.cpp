@@ -9,30 +9,32 @@ using namespace std;
 bool isOperator(char currentOperator){
     return (currentOperator == '&' 
             || currentOperator == '|' 
-            || currentOperator == '~' 
-            || currentOperator == '/' 
-            || currentOperator == '%');
+            || currentOperator == '~');
 }
 
-bool isLeftAssociative(char currentOperator){
+char getAssociativity(char currentOperator){
     switch(currentOperator){
         case '&':
-            return true;
+            return 'L';
         case '|':
-            return true;
+            return 'L';
         case '~':
-            return false;  
+            return 'R';  
         default:
-            return true;
+            return 'L';
     }
 }
 
-int precedence(char currentOperator){
+bool isBoolean(char currentOperator){
+    return (currentOperator == 'T' || currentOperator == 'F');
+}
+
+int getPrecedence(char currentOperator){
     switch(currentOperator){
         case '&':
-            return 2;
+            return 1;
         case '|':
-            return 2;
+            return 0;
         case '~':
             return 4;  
         default:
@@ -40,50 +42,97 @@ int precedence(char currentOperator){
     }
 }
 
-string runShuntingYardAlgorithm(string str){
+//Unused Method: Needs To Be Removed Immediately.
+bool calculate(string input){
+	return false; 
+}
+
+string formatInputValue(string currentInput){
+    string tempInput = "";
+    for(char currentChar : currentInput){
+        if(currentChar != ' '){
+            tempInput += currentChar;
+        }
+    }
+    return tempInput;
+    // char prevOneValue = ' ';
+    // char prevTwoValue = ' ';
+    // string newFormatInput = "";
+    // for(int k=0; k<currentInput.size(); k++){
+    //     char currentValue = currentInput[k];
+    //     newFormatInput += currentValue;
+    //     if(prevOneValue == '-' && currentValue == '>'){
+    //         newFormatInput.pop_back();
+    //         newFormatInput.pop_back();
+    //         newFormatInput += '/';
+    //     }
+    //     if(prevTwoValue == '<' && prevOneValue == '-' && currentValue == '>'){
+    //         newFormatInput.pop_back();
+    //         newFormatInput.pop_back();
+    //         newFormatInput.pop_back();
+    //         newFormatInput += '%';
+    //     }
+    //     if(!isalpha(currentValue) && !isOperator(currentValue) 
+    //         && currentValue != '<' && currentValue != '-' && currentValue != '>' 
+    //         && currentValue != '(' && currentValue != ')' && currentValue != ' '){
+    //         cout << currentValue << endl;
+    //         return "";
+    //     }
+    //     prevTwoValue = prevOneValue;
+    //     prevOneValue = currentValue;
+    // }    
+    // return newFormatInput;
+}
+
+string runShuntingYardAlgorithm(string inputExpression){
     //Output Queue
     queue<char> outQueue;
     //Operator Stack
     stack<char> opStack;
     //While There Are More Tokens:
-    while(!str.empty()){
-        //Read Current Token:
-        char token = str[0];
-        //Update Current String:
-        str = str.substr(1, str.size());
-        //Case 1: Atomic Statement
-        if(isalpha(token)) {
-            //Push it to the output queue
-            outQueue.push(token);
-        }
-        //If the token is an operator
+    inputExpression = formatInputValue(inputExpression);
+    char leftValue = 'L';
+    char rightValue = 'R';
+    char leftP = '(';
+    char rightP = ')';
+    for(char token: inputExpression){
         if(isOperator(token)){
             while(!opStack.empty() 
-                    && (precedence(opStack.top()) > precedence(token)
-                        || (precedence(opStack.top()) == precedence(token) 
-                        && isLeftAssociative(token))) 
-                    && (opStack.top() != '(')){
+                && isOperator(opStack.top())
+                && ((getAssociativity(token) == leftValue && getPrecedence(opStack.top()) >= getPrecedence(token))
+                    || (getAssociativity(token) ==  rightValue && getPrecedence(opStack.top()) > getPrecedence(token)))) {
                 outQueue.push(opStack.top());
                 opStack.pop();
             }
             opStack.push(token);   
         }
-        if(!opStack.empty() && opStack.top() == '('){
+        else if(token == leftP){
             opStack.push(token);
         }
-        if(!opStack.empty() && opStack.top() == ')') {
-            while(!opStack.empty() && opStack.top() != '('){
+        else if(token == rightP) {
+            while(!opStack.empty() && opStack.top() != leftP){
                 outQueue.push(opStack.top());
                 opStack.pop();
             }
             //If the Stack Empty w/o Finding a Left Parenthesis, 
             //then there are Mismatched Parentheses.
-            if(!opStack.empty() && opStack.top() == '('){
+            if(opStack.empty()){
+                cout << "Error: Mismatched Parentheses" << endl;
+                return "ERROR";
+            }
+            if(opStack.top() == '('){
                 opStack.pop();
             }
         }
+        else{
+            outQueue.push(token);
+        }
     }
     while(!opStack.empty()){
+        if(opStack.top() == '(' || opStack.top() == ')'){
+            cout << "Error: Mismatched Parentheses" << endl;
+            return "ERROR";
+        }
         outQueue.push(opStack.top());
         opStack.pop();
     }
@@ -93,42 +142,6 @@ string runShuntingYardAlgorithm(string str){
         outQueue.pop();
     }
     return resultValue;
-}
-
-//Unused Method: Needs To Be Removed Immediately.
-bool calculate(string input){
-	return false; 
-}
-
-string formatInputValue(string currentInput){
-    char prevOneValue = ' ';
-    char prevTwoValue = ' ';
-    string newFormatInput = "";
-    for(int k=0; k<currentInput.size(); k++){
-        char currentValue = currentInput[k];
-        newFormatInput += currentValue;
-        if(prevOneValue == '-' && currentValue == '>'){
-            newFormatInput.pop_back();
-            newFormatInput.pop_back();
-            newFormatInput += '/';
-        }
-        if(prevTwoValue == '<' && prevOneValue == '-' && currentValue == '>'){
-            newFormatInput.pop_back();
-            newFormatInput.pop_back();
-            newFormatInput.pop_back();
-            newFormatInput += '%';
-        }
-        if(!isalpha(currentValue) && !isOperator(currentValue) 
-            && currentValue != '<' && currentValue != '-' && currentValue != '>' 
-            && currentValue != '(' && currentValue != ')' && currentValue != ' '){
-            cout << currentValue << endl;
-            return "";
-        }
-        prevTwoValue = prevOneValue;
-        prevOneValue = currentValue;
-    }
-    //cout << "WHAT = " << newFormatInput << endl;
-    return newFormatInput;
 }
 
 int main(int argc, char** argv){
