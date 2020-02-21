@@ -7,7 +7,7 @@
 using namespace std;
 
 bool isOperator(char token) {
-    return (token == '&' || token == '|' || token == '~' || token == '->' || token == '<->');
+    return (token == '&' || token == '|' || token == '~' || token == '/' || token == '%');
 }
 
 int precedence(char currentOperator) {
@@ -18,9 +18,9 @@ int precedence(char currentOperator) {
             return 2;
         case '~':
             return 1;  
-        case '->':
+        case '/':
             return 2;
-        case '<->':
+        case '%':
             return 2;
         default:
             return -1;
@@ -36,6 +36,7 @@ string runShuntingYardAlgorithm(string str) {
     while(!str.empty()) {
         //Read Current Token:
         char token = str[0];
+        //Update Current String:
         str = str.substr(1, str.size());
         //Case 1: Atomic Statement
         if(isalpha(token)) {
@@ -84,11 +85,43 @@ bool calculate(string input) {
 	return false; 
 }
 
+string formatInputValue(string currentInput){
+    char prevOneValue = ' ';
+    char prevTwoValue = ' ';
+    string newFormatInput = "";
+    for(int k=0; k<currentInput.size(); k++){
+        char currentValue = currentInput[k];
+        newFormatInput += currentValue;
+        if(prevOneValue == '-' && currentValue == '>'){
+            newFormatInput.pop_back();
+            newFormatInput.pop_back();
+            newFormatInput += '/';
+        }
+        if(prevTwoValue == '<' && prevOneValue == '-' && currentValue == '>'){
+            newFormatInput.pop_back();
+            newFormatInput.pop_back();
+            newFormatInput.pop_back();
+            newFormatInput += '%';
+        }
+        if(!isalpha(currentValue) && !isOperator(currentValue) 
+            && currentValue != '<' && currentValue != '-' && currentValue != '>' 
+            && currentValue != '(' && currentValue != ')' && currentValue != ' '){
+            cout << currentValue << endl;
+            return "";
+        }
+        prevTwoValue = prevOneValue;
+        prevOneValue = currentValue;
+    }
+    //cout << "WHAT = " << newFormatInput << endl;
+    return newFormatInput;
+}
+
 int main(int argc, char** argv){
     if(argc < 2){
         return EXIT_FAILURE;
     }
     string inputValue(argv[1]);
+    inputValue = formatInputValue(inputValue);
     string outputValue = runShuntingYardAlgorithm(inputValue);
     cout << outputValue << endl;
     //(A & B) | C 

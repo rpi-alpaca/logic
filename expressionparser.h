@@ -11,6 +11,7 @@ public:
 	string read_token(string str);
 	bool calculate(string input);
 	string getOutput();
+	string formatInputValue(string currentInput);
 	~ExpressionParser();
 
 private:
