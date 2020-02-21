@@ -28,7 +28,6 @@ string read_token(string str) {
     stack<char> opStack;
     //While There Are More Tokens:
     while(!str.empty()) {
-        cout << "Eneted" << endl;
         //Read Current Token:
         char token = str[0];
         str = str.substr(1, str.size());
@@ -80,10 +79,12 @@ bool calculate(string input) {
 }
 
 int main(int argc, char** argv){
-    if(argc < 1){
+    if(argc < 2){
         return EXIT_FAILURE;
     }
-    cout << read_token("(A & B) | C") << endl;
+    string inputValue(argv[1]);
+    string outputValue = read_token(inputValue);
+    cout << outputValue << endl;
     //(A & B) | C 
     return EXIT_SUCCESS;
 }
