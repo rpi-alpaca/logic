@@ -19,5 +19,4 @@ public:
 
 private:
 	string output;
-	
 };

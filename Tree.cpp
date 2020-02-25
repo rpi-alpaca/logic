@@ -84,14 +84,14 @@ StatementNode* StatementParser::copy_statement(StatementNode* old_node) {
 // Assumes statement is of format ((A) & (B)) & (~C)
 void StatementParser::parseStatement(StatementNode*& n, const std::string& statement){
 	string currentInput = "";
-	for(int k=0; k<statement.size(); k++){
+	for(unsigned int k=0; k<statement.size(); k++){
 		currentInput += statement[k];
 	}
 	ExpressionParser* currentExpressionParser = new ExpressionParser();
 	string currentOutput = currentExpressionParser->runShuntingYardAlgorithm(currentInput);
 	stack<StatementNode*> convertToTree;
 	cout << currentOutput << endl;
-	for(int k=0; k<currentOutput.size(); k++){
+	for(unsigned int k=0; k<currentOutput.size(); k++){
 		if(currentExpressionParser->isOperator(currentOutput[k])){
 			StatementNode* prevOne = NULL;
 			if(!convertToTree.empty()){

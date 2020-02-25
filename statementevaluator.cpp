@@ -77,6 +77,7 @@ void StatementEvaluator::recurseDownArray(const StatementParser& s, std::vector<
  */
 bool StatementEvaluator::areLogicallyEquivalent(const StatementParser& s1, const StatementParser& s2) const {
 	// NOT IMPLEMENTED
+	return true;
 }
 
 
