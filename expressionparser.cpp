@@ -158,12 +158,49 @@ string runShuntingYardAlgorithm(string inputExpression){
     return resultValue;
 }
 
+/**Checks if the syntax of the input string is correct
+ * Returns true if so, and false if incorrect or syntax
+ * is ambiguous
+ */
+bool isCorrectSyntax(string input) {
+	if(input.size() == 0) {
+		cout << "Error: Input cannot be empty" << endl;
+		return "ERROR";
+	}
+    // hold the number of left and right parentheses
+    int lParen = 0;
+    int rParen = 0;
+
+    // flag that holds ambiguity of conditionals
+    bool condFlag = false;
+
+    char prev = NULL;
+    for(char curr : input) {
+        if(curr == '(') {
+            lParen++;
+        }
+        else if(curr == ')') {
+            lParen++;
+        }
+        prev = curr;
+    }
+
+    if(lParen != rParen) {
+    	cout << "Error: Input statement must contain equal amount of parentheses" << endl;
+    	return "ERROR";
+    }
+    return true;
+}
+
 int main(int argc, char** argv){
     if(argc < 2){
         return EXIT_FAILURE;
     }
     string inputValue(argv[1]);
     inputValue = formatInputValue(inputValue);
+    if(isCorrectSyntax(inputValue)) {
+    	return EXIT_FAILURE;
+    }
     string outputValue = runShuntingYardAlgorithm(inputValue);
     cout << outputValue << endl;
     //(A & B) | C 
