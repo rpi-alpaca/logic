@@ -9,6 +9,7 @@
 
 #include "statementevaluator.h"
 #include "LogicGate.h"
+#include "expressionparser.h"
 #include "Tree.h"
 
 
