@@ -82,7 +82,7 @@ StatementNode* StatementParser::copy_statement(StatementNode* old_node) {
 
 // Recursively parses a statment
 // Assumes statement is of format ((A) & (B)) & (~C)
-void StatementParser::parseStatement(StatementNode* n, const std::string& statement){
+void StatementParser::parseStatement(StatementNode*& n, const std::string& statement){
 	string currentInput = "";
 	for(int k=0; k<statement.size(); k++){
 		currentInput += statement[k];
@@ -119,7 +119,8 @@ void StatementParser::parseStatement(StatementNode* n, const std::string& statem
 			cout << convertToTree.size() << endl;
 		}
 	}
-	
+	n = convertToTree.top();
+
 	// int parenCount = 0;
 
 	// // If there is a negation character, negate the current head node and recurse
