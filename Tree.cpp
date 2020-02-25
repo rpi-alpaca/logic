@@ -38,15 +38,14 @@ void StatementParser::print() const {
 
 //Helper function for print
 void StatementParser::printNode(StatementNode* s) const {
-	if (s->negation) 
-		std::cout << '~';
-	if (s->opType == 'v') 
-		std::cout << s->value;
-	else {
+	if(s == NULL){
+		return;
+	}
+	else{
 		std::cout << '(';
 		printNode(s->left);
 		std::cout << " ";
-		std::cout << s->opType << " ";
+		std::cout << s->value << " ";
 		printNode(s->right);
 		std::cout << ")";
 	}
@@ -89,12 +88,38 @@ void StatementParser::parseStatement(StatementNode* n, const std::string& statem
 		currentInput += statement[k];
 	}
 	ExpressionParser* currentExpressionParser = new ExpressionParser();
-	string output = currentExpressionParser->runShuntingYardAlgorithm(currentInput);
-	stack<char> convertToTree;
-	// cout <<output << endl;
-	// for(int k=0; k<currentInput.size(); k++){
-	// 	if()
-	// }
+	string currentOutput = currentExpressionParser->runShuntingYardAlgorithm(currentInput);
+	stack<StatementNode*> convertToTree;
+	cout << currentOutput << endl;
+	for(int k=0; k<currentOutput.size(); k++){
+		if(currentExpressionParser->isOperator(currentOutput[k])){
+			StatementNode* prevOne = NULL;
+			if(!convertToTree.empty()){
+				prevOne = convertToTree.top();
+				convertToTree.pop();
+			}
+			StatementNode* prevTwo = NULL;
+			if(!convertToTree.empty()){
+				prevTwo = convertToTree.top();
+				convertToTree.pop();
+			}
+			StatementNode* currentNode = new StatementNode();
+			currentNode->value = currentOutput[k];
+			currentNode->opType = currentOutput[k];
+			currentNode->left = prevOne;
+			currentNode->right = prevTwo;
+			convertToTree.push(currentNode);
+			cout << convertToTree.size() << endl;
+		}
+		else{
+			StatementNode* currentNode = new StatementNode();
+			currentNode->value = currentOutput[k];
+			currentNode->opType = currentOutput[k];
+			convertToTree.push(currentNode);
+			cout << convertToTree.size() << endl;
+		}
+	}
+	
 	// int parenCount = 0;
 
 	// // If there is a negation character, negate the current head node and recurse
