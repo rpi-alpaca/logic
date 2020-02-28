@@ -106,8 +106,8 @@ void StatementParser::parseStatement(StatementNode*& n, const std::string& state
 			StatementNode* currentNode = new StatementNode();
 			currentNode->value = currentOutput[k];
 			currentNode->opType = currentOutput[k];
-			currentNode->left = prevOne;
-			currentNode->right = prevTwo;
+			currentNode->left = prevTwo;
+			currentNode->right = prevOne;
 			convertToTree.push(currentNode);
 			cout << convertToTree.size() << endl;
 		}
