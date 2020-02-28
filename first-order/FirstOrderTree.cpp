@@ -134,19 +134,6 @@ void FirstOrderTree::parseStatement(FirstOrderNode* n, const std::string& statem
 	//Create a node for the right statement
 	n->right = new FirstOrderNode();
 
-	//Changes conditional A -> B to ~A | B
-	if (n->opType == '>') {
-		n->left->negation = !(n->left->negation);
-		n->opType = '|';
-	}
-	if (n->opType == '=') {
-		std::string newLeft = "(" + subStatementL + ") & (" + subStatementR + ")";
-		std::string newRight = "(~(" + subStatementL + ")) & (~(" + subStatementR + "))";
-		n->opType = '|';
-		subStatementL = newLeft;
-		subStatementR = newRight;
-	}
-
 	parseStatement(n->left, subStatementL);
 	parseStatement(n->right, subStatementR);
 } 
