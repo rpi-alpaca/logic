@@ -3,16 +3,14 @@
 #include <cstring>
 using namespace std;
 
+//Expression Parser = Main Class For Shunting-Yard Algorithm
+//Expression Parser Places A Given Expression Into Reverse Polish Notation.
 class ExpressionParser {
 public:
 	ExpressionParser();
 	bool isOperator(char token);
 	char getAssociativity(char op);
-	bool isBoolean(char c);
 	int getPrecedence(char op);
 	string formatInputValue(string currentInput);
 	string runShuntingYardAlgorithm(string str);
-
-private:
-	string output;
 };
