@@ -33,9 +33,9 @@ int main(int argc, char* argv[]) {
 	StatementParser evalExample("(A & B) | (C & D)");
 	std::vector<std::pair<std::string, bool> > varTruthValues;
 	varTruthValues.push_back(make_pair("A", true));
-	varTruthValues.push_back(make_pair("B", true));
+	varTruthValues.push_back(make_pair("B", false));
 	varTruthValues.push_back(make_pair("C", true));
-	varTruthValues.push_back(make_pair("D", true));
+	varTruthValues.push_back(make_pair("D", false));
 	StatementEvaluator eval;
 	std::cout << eval.evaluateStatement(evalExample, varTruthValues) << std::endl;
 
