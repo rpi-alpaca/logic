@@ -103,6 +103,7 @@ string runShuntingYardAlgorithm(string inputExpression){
     inputExpression = formatInputValue(inputExpression);
     char leftValue = 'L';
     char rightValue = 'R';
+    
     char leftP = '(';
     char rightP = ')';
     for(char token: inputExpression){
@@ -180,7 +181,7 @@ bool isCorrectSyntax(string input) {
             lParen++;
         }
         else if(curr == ')') {
-            lParen++;
+            rParen++;
         }
         prev = curr;
     }
@@ -198,7 +199,7 @@ int main(int argc, char** argv){
     }
     string inputValue(argv[1]);
     inputValue = formatInputValue(inputValue);
-    if(isCorrectSyntax(inputValue)) {
+    if(!isCorrectSyntax(inputValue)) {
     	return EXIT_FAILURE;
     }
     string outputValue = runShuntingYardAlgorithm(inputValue);
