@@ -5,7 +5,7 @@
 
 void LogicGate::asciiDraw(){
 	std::cout << std::endl;
-	std::cout << "----------------" << std::endl;
+	std::cout << "***************************" << std::endl;
 	std::cout << "This is a asciiDraw" << std::endl;
 	std::cout << std::endl;
 	if(initStatements.size() == 0) std::cout << "No Statements!" << std::endl;
@@ -18,7 +18,7 @@ void LogicGate::asciiDraw(){
 	}
 
 	std::cout << std::endl;
-	std::cout << "----------------" << std::endl;
+	std::cout << "***************************" << std::endl;
 	std::cout << std::endl;
 }
 
@@ -34,7 +34,7 @@ bool LogicGate::removeStatement(char removeState){
 //Changing a state too itself isn't much of a big problem so for now will ignore
 bool LogicGate::changeOnOff(char stateName, bool newSwitch){
 	std::unordered_map<char,bool>::iterator got = initStatements.find(stateName);
-	if(containsState(stateName)){
+	if(  got == initStatements.end()  ){
 		std::cout << "Error Statement Does Not Exist" << std::endl;
 		return false;	
 	} 

@@ -9,7 +9,7 @@
 //Will string be needed?
 #include <string>
 
-#define std::map<long double, std::pair<char, std::pair<char, char>>> SOMETHING
+#define SOMETHING std::map<long double, std::pair<char, std::pair<char, char>>> 
 
 class LogicGate{
 public:
