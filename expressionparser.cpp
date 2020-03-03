@@ -57,11 +57,6 @@ int ExpressionParser::getPrecedence(char currentOperator){
     }
 }
 
-//Unused Method: Needs To Be Removed Immediately.
-bool ExpressionParser::calculate(string input){
-	return false; 
-}
-
 string ExpressionParser::formatInputValue(string currentInput){
     string tempInput = "";
     for(char currentChar : currentInput){
