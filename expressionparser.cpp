@@ -57,12 +57,81 @@ int ExpressionParser::getPrecedence(char currentOperator){
     }
 }
 
+/** Returns true if the current operator is able to be
+ *  generalized and false otherwise
+ */
+bool ExpressionParser::getGenerality(char currentOperator){
+    switch(currentOperator){
+        case '&':
+            return true;
+        case '|':
+            return true;
+        case '=':
+            return true;
+        case '>':
+            return false;
+        case '~':
+            return false;  
+        default:
+            return false;
+    }
+}
+
+/** Checks if the syntax of the input string is correct
+ *  Returns true if so, and false if incorrect or syntax
+ *  is ambiguous
+ *  Ambiguous syntax is defined as any generalized expression
+ *  that could result in two different expressions given different
+ *  orders of operations on the generalized operations.
+ *  
+ *  Ex:
+ *      A|B|C is not ambiguous because A | (B | C) = (A | B) | C
+ *      A>B>C is ambiguous because A > (B > C) != (A > B) > C
+ *      A|B&C is ambiguous because A | (B & C) != (A | B) & C
+ */
+bool ExpressionParser::isCorrectSyntax(string input) {
+    if(input.size() == 0) {
+        cout << "Error: Input cannot be empty" << endl;
+        return false;
+    }
+    char* firstOp = NULL;
+    bool general = false;
+
+    // search through the length of the string
+    for(unsigned int i = 0; i < input.length(); i++) {
+        // if an operator is found
+        if(isOperator(input[i])){
+            // if it is the first operator on this level, store it
+            if(firstOp == NULL) {
+                firstOp = &input[i];
+                general = getGenerality(*firstOp);
+            }
+            // if it is not the first operator
+            else {
+                // if it is a different operator
+                // or if the first operator is not generalizable
+                if(input[i] != *firstOp || general == false) {
+                    cout << "Error: Ambiguous Statement With operators " << *firstOp << " and " << input[i] << endl;
+                    firstOp = NULL;
+                    return false;
+                }
+            }
+
+        }
+    }
+
+    return true;
+}
+
 string ExpressionParser::formatInputValue(string currentInput){
     string tempInput = "";
     for(char currentChar : currentInput){
         if(currentChar != ' '){
             tempInput += currentChar;
         }
+    }
+    if(!isCorrectSyntax(tempInput)) {
+        return "ERROR";
     }
     return tempInput;
     // char prevOneValue = ' ';
@@ -159,39 +228,6 @@ string ExpressionParser::runShuntingYardAlgorithm(string inputExpression){
     return resultValue;
 }
 
-/**Checks if the syntax of the input string is correct
- * Returns true if so, and false if incorrect or syntax
- * is ambiguous
- */
-bool isCorrectSyntax(string input) {
-	if(input.size() == 0) {
-		cout << "Error: Input cannot be empty" << endl;
-		return "ERROR";
-	}
-    // hold the number of left and right parentheses
-    int lParen = 0;
-    int rParen = 0;
-
-    // flag that holds ambiguity of conditionals
-    bool condFlag = false;
-
-    char prev = NULL;
-    for(char curr : input) {
-        if(curr == '(') {
-            lParen++;
-        }
-        else if(curr == ')') {
-            rParen++;
-        }
-        prev = curr;
-    }
-
-    if(lParen != rParen) {
-    	cout << "Error: Input statement must contain equal amount of parentheses" << endl;
-    	return "ERROR";
-    }
-    return true;
-}
 // int main(int argc, char** argv){
 //     if(argc < 2){
 //         return EXIT_FAILURE;

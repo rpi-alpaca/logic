@@ -10,6 +10,8 @@ public:
 	char getAssociativity(char op);
 	bool isBoolean(char c);
 	int getPrecedence(char op);
+	bool getGenerality(char op);
+	bool isCorrectSyntax(string input);
 	string formatInputValue(string currentInput);
 	string runShuntingYardAlgorithm(string str);
 
