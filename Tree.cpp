@@ -1,4 +1,6 @@
 #include "Tree.h"
+#include "expressionparser.h"
+#include <stack>
 
 StatementParser::StatementParser(){
 	head = new StatementNode;
@@ -13,6 +15,7 @@ StatementParser::StatementParser(const StatementParser& s) {
 StatementParser::StatementParser(const StatementParser& s1, const StatementParser& s2) {
 	head = new StatementNode;
 	head->opType = '&';
+	head->value = '&';
 	head->left = copy_statement(s1.head);
 	head->right = copy_statement(s2.head);
 }
@@ -36,15 +39,14 @@ void StatementParser::print() const {
 
 //Helper function for print
 void StatementParser::printNode(StatementNode* s) const {
-	if (s->negation) 
-		std::cout << '~';
-	if (s->opType == 'v') 
-		std::cout << s->value;
-	else {
+	if(s == NULL){
+		return;
+	}
+	else{
 		std::cout << '(';
 		printNode(s->left);
 		std::cout << " ";
-		std::cout << s->opType << " ";
+		std::cout << s->value << " ";
 		printNode(s->right);
 		std::cout << ")";
 	}
@@ -81,74 +83,112 @@ StatementNode* StatementParser::copy_statement(StatementNode* old_node) {
 
 // Recursively parses a statment
 // Assumes statement is of format ((A) & (B)) & (~C)
-void StatementParser::parseStatement(StatementNode* n, const std::string& statement){
-	int parenCount = 0;
-
-	// If there is a negation character, negate the current head node and recurse
-	if (statement[0] == '~') {
-		n->negation = !(n->negation);
-		//If there's no parenthesis after, statement is basic
-		if (statement[1] != '(') {
-			n->value = statement.substr(1, statement.size()-1);
-			n->opType = 'v';
-			return;
+void StatementParser::parseStatement(StatementNode*& n, const std::string& statement){
+	string currentInput = "";
+	for(unsigned int k=0; k<statement.size(); k++){
+		currentInput += statement[k];
+	}
+	ExpressionParser* currentExpressionParser = new ExpressionParser();
+	string currentOutput = currentExpressionParser->runShuntingYardAlgorithm(currentInput);
+	stack<StatementNode*> convertToTree;
+	cout << currentOutput << endl;
+	for(unsigned int k=0; k<currentOutput.size(); k++){
+		if(currentExpressionParser->isOperator(currentOutput[k])){
+			StatementNode* prevOne = NULL;
+			if(!convertToTree.empty()){
+				prevOne = convertToTree.top();
+				convertToTree.pop();
+			}
+			StatementNode* prevTwo = NULL;
+			if(!convertToTree.empty()){
+				prevTwo = convertToTree.top();
+				convertToTree.pop();
+			}
+			StatementNode* currentNode = new StatementNode();
+			currentNode->value = currentOutput[k];
+			currentNode->opType = currentOutput[k];
+			currentNode->left = prevTwo;
+			currentNode->right = prevOne;
+			convertToTree.push(currentNode);
+			cout << convertToTree.size() << endl;
 		}
-		//Otherwise, statement is compound
-		//Recurse with outer parentheses removed
-		parseStatement(n, statement.substr(2, statement.size()-3));
-		return;
-	}
-
-	//If there's no parenthesis at the start, statement is basic
-	if (statement[0] != '(') {
-		n->value = statement;
-		n->opType = 'v';
-		return;
-	}
-
-	std::string subStatementL;
-    std::string::size_type i;
-	// Evaluates the left
-	for (i = 0; i < statement.size(); i++) {
-		if (statement[i] == '(')
-			parenCount++;
-		else if (statement[i] == ')')
-			parenCount--;
-		//parenCount == zero suggests a fully closed statement
-		if (parenCount == 0) {
-			//subStatementL is the inner statement without parentheses
-			subStatementL = statement.substr(1, i-1);
-			break;
+		else{
+			StatementNode* currentNode = new StatementNode();
+			currentNode->value = currentOutput[k];
+			currentNode->opType = currentOutput[k];
+			convertToTree.push(currentNode);
+			cout << convertToTree.size() << endl;
 		}
 	}
+	n = convertToTree.top();
 
-	//Statement is compound, find the opType
-	n->opType = statement[i+2];
+	// int parenCount = 0;
 
-	//subStatementR is the inner statement without parentheses after the operation
-	std::string subStatementR = statement.substr(i+5, statement.size()-(i+5)-1);
+	// // If there is a negation character, negate the current head node and recurse
+	// if (statement[0] == '~') {
+	// 	n->negation = !(n->negation);
+	// 	//If there's no parenthesis after, statement is basic
+	// 	if (statement[1] != '(') {
+	// 		n->value = statement.substr(1, statement.size()-1);
+	// 		n->opType = 'v';
+	// 		return;
+	// 	}
+	// 	//Otherwise, statement is compound
+	// 	//Recurse with outer parentheses removed
+	// 	parseStatement(n, statement.substr(2, statement.size()-3));
+	// 	return;
+	// }
 
-	//Give subStatementL to left node for parsing
-	n->left = new StatementNode();
+	// //If there's no parenthesis at the start, statement is basic
+	// if (statement[0] != '(') {
+	// 	n->value = statement;
+	// 	n->opType = 'v';
+	// 	return;
+	// }
 
-	//Create a node for the right statement
-	n->right = new StatementNode();
+	// std::string subStatementL;
+ //    std::string::size_type i;
+	// // Evaluates the left
+	// for (i = 0; i < statement.size(); i++) {
+	// 	if (statement[i] == '(')
+	// 		parenCount++;
+	// 	else if (statement[i] == ')')
+	// 		parenCount--;
+	// 	//parenCount == zero suggests a fully closed statement
+	// 	if (parenCount == 0) {
+	// 		//subStatementL is the inner statement without parentheses
+	// 		subStatementL = statement.substr(1, i-1);
+	// 		break;
+	// 	}
+	// }
 
-	//Changes conditional A -> B to ~A | B
-	if (n->opType == '>') {
-		n->left->negation = !(n->left->negation);
-		n->opType = '|';
-	}
-	if (n->opType == '=') {
-		std::string newLeft = "(" + subStatementL + ") & (" + subStatementR + ")";
-		std::string newRight = "(~(" + subStatementL + ")) & (~(" + subStatementR + "))";
-		n->opType = '|';
-		subStatementL = newLeft;
-		subStatementR = newRight;
-	}
+	// //Statement is compound, find the opType
+	// n->opType = statement[i+2];
 
-	parseStatement(n->left, subStatementL);
-	parseStatement(n->right, subStatementR);
+	// //subStatementR is the inner statement without parentheses after the operation
+	// std::string subStatementR = statement.substr(i+5, statement.size()-(i+5)-1);
+
+	// //Give subStatementL to left node for parsing
+	// n->left = new StatementNode();
+
+	// //Create a node for the right statement
+	// n->right = new StatementNode();
+
+	// //Changes conditional A -> B to ~A | B
+	// if (n->opType == '>') {
+	// 	n->left->negation = !(n->left->negation);
+	// 	n->opType = '|';
+	// }
+	// if (n->opType == '=') {
+	// 	std::string newLeft = "(" + subStatementL + ") & (" + subStatementR + ")";
+	// 	std::string newRight = "(~(" + subStatementL + ")) & (~(" + subStatementR + "))";
+	// 	n->opType = '|';
+	// 	subStatementL = newLeft;
+	// 	subStatementR = newRight;
+	// }
+
+	// parseStatement(n->left, subStatementL);
+	// parseStatement(n->right, subStatementR);
 } 
 
 // std::string conditional(std::string A, std::string B){

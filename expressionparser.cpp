@@ -4,9 +4,14 @@
 #include <stack>
 #include <iostream>
 #include <stdlib.h>
+#include "expressionparser.h"
 using namespace std;
 
-bool isOperator(char currentOperator){
+ExpressionParser::ExpressionParser(){
+    output = "";
+}
+
+bool ExpressionParser::isOperator(char currentOperator){
     return (currentOperator == '&' 
             || currentOperator == '|' 
             || currentOperator == '~'
@@ -14,7 +19,7 @@ bool isOperator(char currentOperator){
             || currentOperator == '>');
 }
 
-char getAssociativity(char currentOperator){
+char ExpressionParser::getAssociativity(char currentOperator){
     switch(currentOperator){
         case '&':
             return 'L';
@@ -31,11 +36,11 @@ char getAssociativity(char currentOperator){
     }
 }
 
-bool isBoolean(char currentOperator){
+bool ExpressionParser::isBoolean(char currentOperator){
     return (currentOperator == 'T' || currentOperator == 'F');
 }
 
-int getPrecedence(char currentOperator){
+int ExpressionParser::getPrecedence(char currentOperator){
     switch(currentOperator){
         case '&':
             return 2;
@@ -52,12 +57,7 @@ int getPrecedence(char currentOperator){
     }
 }
 
-//Unused Method: Needs To Be Removed Immediately.
-bool calculate(string input){
-	return false; 
-}
-
-string formatInputValue(string currentInput){
+string ExpressionParser::formatInputValue(string currentInput){
     string tempInput = "";
     for(char currentChar : currentInput){
         if(currentChar != ' '){
@@ -94,7 +94,7 @@ string formatInputValue(string currentInput){
     // return newFormatInput;
 }
 
-string runShuntingYardAlgorithm(string inputExpression){
+string ExpressionParser::runShuntingYardAlgorithm(string inputExpression){
     //Output Queue
     queue<char> outQueue;
     //Operator Stack
@@ -192,18 +192,14 @@ bool isCorrectSyntax(string input) {
     }
     return true;
 }
-
-int main(int argc, char** argv){
-    if(argc < 2){
-        return EXIT_FAILURE;
-    }
-    string inputValue(argv[1]);
-    inputValue = formatInputValue(inputValue);
-    if(!isCorrectSyntax(inputValue)) {
-    	return EXIT_FAILURE;
-    }
-    string outputValue = runShuntingYardAlgorithm(inputValue);
-    cout << outputValue << endl;
-    //(A & B) | C 
-    return EXIT_SUCCESS;
-}
+// int main(int argc, char** argv){
+//     if(argc < 2){
+//         return EXIT_FAILURE;
+//     }
+//     string inputValue(argv[1]);
+//     inputValue = formatInputValue(inputValue);
+//     string outputValue = runShuntingYardAlgorithm(inputValue);
+//     cout << outputValue << endl;
+//     //(A & B) | C 
+//     return EXIT_SUCCESS;
+// }

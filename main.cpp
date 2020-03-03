@@ -9,6 +9,7 @@
 
 #include "statementevaluator.h"
 #include "LogicGate.h"
+#include "expressionparser.h"
 #include "Tree.h"
 
 
@@ -28,6 +29,15 @@ int main(int argc, char* argv[]) {
 
 	statementParserTest();
 	statementEvaluatorTest();
+
+	StatementParser evalExample("(A & B) | (C & D)");
+	std::vector<std::pair<std::string, bool> > varTruthValues;
+	varTruthValues.push_back(make_pair("A", true));
+	varTruthValues.push_back(make_pair("B", true));
+	varTruthValues.push_back(make_pair("C", true));
+	varTruthValues.push_back(make_pair("D", true));
+	StatementEvaluator eval;
+	std::cout << eval.evaluateStatement(evalExample, varTruthValues) << std::endl;
 
 	return 0;
 }
