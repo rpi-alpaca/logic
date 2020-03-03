@@ -161,7 +161,7 @@ void StatementParser::parseStatement(StatementNode*& n, const std::string& state
 			}
 			//As Long As No NULL, Add prevOne w/ Flag negation = True Back To Stack.
 			if(prevOne != NULL){
-				prevOne->negation = true;
+				prevOne->negation = !(prevOne->negation);
 				convertToTree.push(prevOne);
 			}
 		}
