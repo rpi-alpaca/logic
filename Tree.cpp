@@ -15,6 +15,7 @@ StatementParser::StatementParser(const StatementParser& s) {
 StatementParser::StatementParser(const StatementParser& s1, const StatementParser& s2) {
 	head = new StatementNode;
 	head->opType = '&';
+	head->value = '&';
 	head->left = copy_statement(s1.head);
 	head->right = copy_statement(s2.head);
 }
