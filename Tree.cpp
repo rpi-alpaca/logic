@@ -106,10 +106,7 @@ StatementNode* StatementParser::copy_statement(StatementNode* old_node) {
 //Assesses The Precedence Of Operators To Construct Expression Tree.
 void StatementParser::parseStatement(StatementNode*& n, const std::string& statement){
 	//Make A Copy Of Input Statement:
-	string currentInput = "";
-	for(unsigned int k=0; k<statement.size(); k++){
-		currentInput += statement[k];
-	}
+	string currentInput = string(statement);
 	//Run Shunting-Yard Algorithm To Grab Output Reverser Polish Notation of Statement.
 	ExpressionParser* currentExpressionParser = new ExpressionParser();
 	string currentOutput = currentExpressionParser->runShuntingYardAlgorithm(currentInput);
