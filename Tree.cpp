@@ -50,12 +50,16 @@ void StatementParser::printNode(StatementNode* s) const {
 	if(!s){
 		return;
 	}
+	//If Negation Node, Append Negation Prior To Printing Value
 	if(s->negation){
 		cout << "~";
 	}
+	//Case 1: Not Operator, Simply Print Value.
 	if(s->opType == 'v'){
 		cout << s->value;
 	}
+	//Case 2: Operator
+	//Simply Print Left Child + Current Value Operator + Right Child.
 	else{
 		cout << '(';
 		printNode(s->left);
