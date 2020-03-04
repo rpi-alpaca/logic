@@ -1,44 +1,56 @@
-// this is the main file for the logic team
-
-
-/*
-	This is a program that will take in a logical statement and do various functions
-	
-*/
-
+//This is the Main File for the Logic Team.
+//Currently, this is simply a Command-Line Interface to be Integrated with the Frontend GUI.
+//That is, this is a Program that will take in a Logical Statement + Perform Various Operations.
 
 #include "statementevaluator.h"
 #include "LogicGate.h"
+#include "expressionparser.h"
 #include "Tree.h"
-
+using namespace std;
 
 void statementEvaluatorTest();
 void statementParserTest();
 
 int main(int argc, char* argv[]) {
-	std::cout << "Testing" << std::endl;
+	cout << "Start of Testing For ALPACA-LOGIC Engine." << endl;
+	string stConstructor;
 
-	std::string stConstructor;
-	std::cout << "Input a statement of format (A) & (B): ";
-	std::getline(std::cin, stConstructor);
-
+	cout << "Input Valid Statement of the Format (A) & (B): ";
+	getline(cin, stConstructor);
 	StatementParser testStatement(stConstructor);
+
+	cout << endl;
+	cout << "Output Print() Test:" << endl;
 	testStatement.print();
+	cout << "Output PrintTree() Test: " << endl;
 	testStatement.printTree();
 
 	statementParserTest();
 	statementEvaluatorTest();
 
-	return 0;
+	cout << endl;
+	cout << "Test Expression Evaluation For (A & B) | (C & D): " << endl;
+	cout << "Input: A = T, B = F, C = T, D = F." << endl;
+	StatementParser evalExample("(A & B) | (C & D)");
+	vector<pair<string, bool> > varTruthValues;
+	varTruthValues.push_back(make_pair("A", true));
+	varTruthValues.push_back(make_pair("B", false));
+	varTruthValues.push_back(make_pair("C", true));
+	varTruthValues.push_back(make_pair("D", false));
+	StatementEvaluator eval;
+	cout << "Output = " << eval.evaluateStatement(evalExample, varTruthValues) << endl;
+
+	return EXIT_SUCCESS;
 }
 
 void statementParserTest() {
-	std::cout << "RUNNING STATEMENTPARSERTEST" << std::endl << std::endl;
+	cout << endl;
+	cout << "Running Statement Parser Test." << endl << endl;
 
 	StatementParser state1;
 	StatementParser state2;
-	state1.changeHeadValue("The sky is blue");
-	state2.changeHeadValue("Hali's shirt is blue");
+	state1.changeHeadValue("The Sky Is Blue");
+	state2.changeHeadValue("Hali's Shirt Is Blue");
 	StatementParser combined(state1, state2);
 
 	state1.print();
@@ -47,17 +59,18 @@ void statementParserTest() {
 }
 
 void statementEvaluatorTest() {
-	std::cout << "RUNNING STATEMENTEVALUATORTEST" << std::endl << std::endl;
+	cout << endl;
+	cout << "Running Statement Evaluator Test." << endl << endl;
 
 	StatementParser state1;
 	StatementParser state2;
-	state1.changeHeadValue("The sky is blue");
-	state2.changeHeadValue("Hali's shirt is blue");
+	state1.changeHeadValue("The Sky Is Blue");
+	state2.changeHeadValue("Hali's Shirt Is Blue");
 	StatementParser combined(state1, state2);
 
-	std::vector<std::string> variables;
-	variables.emplace_back("The sky is blue");
-	variables.emplace_back("Hali's shirt is blue");
+	vector<string> variables;
+	variables.emplace_back("The Sky Is Blue");
+	variables.emplace_back("Hali's Shirt Is Blue");
 
 	// Testing printTruthTable and evaluateStatement
 	StatementEvaluator eval;
