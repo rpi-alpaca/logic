@@ -25,20 +25,67 @@ int main(int argc, char* argv[]) {
 	cout << "Output PrintTree() Test: " << endl;
 	testStatement.printTree();
 
-	statementParserTest();
-	statementEvaluatorTest();
+	// statementParserTest();
+	// statementEvaluatorTest();
 
 	cout << endl;
-	cout << "Test Expression Evaluation For (A & B) | (C & D): " << endl;
-	cout << "Input: A = T, B = F, C = T, D = F." << endl;
-	StatementParser evalExample("(A & B) | (C & D)");
-	vector<pair<string, bool> > varTruthValues;
-	varTruthValues.push_back(make_pair("A", true));
-	varTruthValues.push_back(make_pair("B", false));
-	varTruthValues.push_back(make_pair("C", true));
-	varTruthValues.push_back(make_pair("D", false));
+
+
+	// string inputStatement = "~((A & B) | (C & D))";
+
+	cout << "Truth Table For " << stConstructor << ": " << endl;
+	/*
+	StatementParser evalExample(inputStatement);
+	vector<string> varTruthValues;
+	varTruthValues.push_back("A");
+	varTruthValues.push_back("B");
+	varTruthValues.push_back("C");
+	varTruthValues.push_back("D");
+	*/
 	StatementEvaluator eval;
-	cout << "Output = " << eval.evaluateStatement(evalExample, varTruthValues) << endl;
+	eval.printTruthTable(testStatement);
+
+	cout << endl << endl;
+
+	vector<string> varTruthValues;
+	varTruthValues.push_back("A");
+	varTruthValues.push_back("B");
+	varTruthValues.push_back("C");
+
+	eval.printTruthTable(testStatement, varTruthValues);
+
+	// Test 1
+	StatementParser statement1("A & B");
+	cout << "\nTruth Table For " << "A & B" << ": " << endl;
+	eval.printTruthTable(statement1);
+
+	StatementParser statement2("~(~A | ~B)");
+	cout << "\nTruth Table For " << "~(~A | ~B)" << ": " << endl;
+	eval.printTruthTable(statement2);
+
+	cout << endl << "statement1 and statement2 are equal: " << boolalpha << eval.areLogicallyEquivalent(statement1, statement2) << endl << endl << endl;
+
+	// Test 2
+	StatementParser statement3("~(A | ~(B | (~C & D))) | (C & B) | ~A");
+	cout << "\nTruth Table For " << "~(A | ~(B | (~C & D))) | (C & B) | ~A" << ": " << endl;
+	eval.printTruthTable(statement3);
+
+	StatementParser statement4("~A | (C & B)");
+	cout << "\nTruth Table For " << "~A | (C & B)" << ": " << endl;
+	eval.printTruthTable(statement4);
+
+	cout << endl << "statement3 and statement4 are equal: " << boolalpha << eval.areLogicallyEquivalent(statement3, statement4) << endl << endl << endl;
+
+	// Test 3
+	StatementParser statement5("A & B");
+	cout << "\nTruth Table For " << "A & B" << ": " << endl;
+	eval.printTruthTable(statement5);
+
+	StatementParser statement6("A & ~B");
+	cout << "\nTruth Table For " << "A & ~B" << ": " << endl;
+	eval.printTruthTable(statement6);
+
+	cout << endl << "statement5 and statement6 are equal: " << boolalpha << eval.areLogicallyEquivalent(statement5, statement6) << endl << endl << endl;
 
 	return EXIT_SUCCESS;
 }

@@ -1,6 +1,7 @@
 #include "Tree.h"
 #include "expressionparser.h"
 #include <stack>
+#include <algorithm>
 using namespace std;
 
 //Constructor For Statement Parser w/ Root Head Node:
@@ -173,6 +174,10 @@ void StatementParser::parseStatement(StatementNode*& n, const std::string& state
 			//Note: v' May Indicate Leaf Node?
 			StatementNode* currentNode = new StatementNode();
 			currentNode->value = currentOutput[k];
+			if(find(variableNames.begin(), variableNames.end(), currentNode->value) == variableNames.end()) {
+				variableNames.push_back(currentNode->value);
+				++numVariables;
+			}
 			currentNode->opType = 'v';
 			//Set Negation = False As Sanity Check Once Again.
 			currentNode->negation = false;
@@ -186,4 +191,16 @@ void StatementParser::parseStatement(StatementNode*& n, const std::string& state
 	}
 	//Set New Head Value = Top/Root of Stack.
 	n = convertToTree.top();
+}
+
+const vector<string>& StatementParser::getVariableNames() const {
+	return variableNames;
+}
+
+unsigned int StatementParser::getNumVariables() const {
+	return numVariables;
+}
+
+bool sortByVariableName(const pair<string, bool>& a, const pair<string, bool>& b) {
+	return a.first < b.first;
 }

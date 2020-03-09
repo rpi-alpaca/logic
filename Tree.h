@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
+#include <utility>
 using namespace std;
 
 //StatementNode = Nodes In Expression Tree For Logical Expresssions.
@@ -32,12 +34,20 @@ public:
 	void printNode(StatementNode* s) const;
 	void printTree() const;
 	void printTreeHelper(StatementNode* s, int depth) const;
+	const vector<string>& getVariableNames() const;
+	unsigned int getNumVariables() const;
 
 private:
 	StatementNode* copy_statement(StatementNode* old_node);
 	void parseStatement(StatementNode*& n, const std::string& statement);
 	StatementNode* head;
+	// Stores the name of a variables inputted
+	vector<string> variableNames;
+	// Stores the number of variables
+	unsigned int numVariables;
 	friend class StatementEvaluator;
 };
+
+bool sortByVariableName(const pair<string, bool>& a, const pair<string, bool>& b);
 
 #endif
