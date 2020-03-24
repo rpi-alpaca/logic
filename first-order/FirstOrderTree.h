@@ -34,7 +34,7 @@ public:
 
 private:
 	FirstOrderNode* copy_statement(FirstOrderNode* old_node);
-	void parseStatement(FirstOrderNode* n, const std::string& statement);
+	void parseStatement(FirstOrderNode*& n, const std::string& statement);
 	FirstOrderNode* head;
 	friend class StatementEvaluator;
 };

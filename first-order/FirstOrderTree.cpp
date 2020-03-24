@@ -1,4 +1,7 @@
 #include "FirstOrderTree.h"
+#include "expressionparser.h"
+#include <stack>
+using namespace std;
 
 FirstOrderTree::FirstOrderTree(){
 	head = new FirstOrderNode;
@@ -79,64 +82,93 @@ FirstOrderNode* FirstOrderTree::copy_statement(FirstOrderNode* old_node) {
 	return new_node;
 }
 
-// Recursively parses a statment
-// Assumes statement is of format ((A) & (B)) & (~C)
-void FirstOrderTree::parseStatement(FirstOrderNode* n, const std::string& statement){
-	int parenCount = 0;
-
-	// If there is a negation character, negate the current head node and recurse
-	if (statement[0] == '~') {
-		n->negation = !(n->negation);
-		//If there's no parenthesis after, statement is basic
-		if (statement[1] != '(') {
-			n->value = statement.substr(1, statement.size()-1);
-			n->opType = 'v';
-			return;
-		}
-		//Otherwise, statement is compound
-		//Recurse with outer parentheses removed
-		parseStatement(n, statement.substr(2, statement.size()-3));
+//Recursively Parses Any String Input Statment
+//Previously Assumed That Statement Format = ((A) & (B)) & (~C)
+//However, Now = Implementation w/ Shunting-Yard Algorithm
+//Assesses The Precedence Of Operators To Construct Expression Tree.
+void FirstOrderTree::parseStatement(FirstOrderNode*& n, const std::string& statement){
+	//Make A Copy Of Input Statement:
+	string currentInput = string(statement);
+	//Run Shunting-Yard Algorithm To Grab Output Reverser Polish Notation of Statement.
+	ExpressionParser* currentExpressionParser = new ExpressionParser();
+	string currentOutput = currentExpressionParser->runShuntingYardAlgorithm(currentInput);
+	stack<FirstOrderNode*> convertToTree;
+	cout << "Output of Shunting-Yard Algorithm (Reverse Polish Notation) = " << currentOutput << endl;
+	//Case = Invalid Expression Communicated By Expression Parser.
+	if(currentOutput == "ERROR"){
 		return;
 	}
-
-	//If there's no parenthesis at the start, statement is basic
-	if (statement[0] != '(') {
-		n->value = statement;
-		n->opType = 'v';
-		return;
-	}
-
-	std::string subStatementL;
-	std::string::size_type i;
-	// Evaluates the left
-	for (i = 0; i < statement.size(); i++) {
-		if (statement[i] == '(')
-			parenCount++;
-		else if (statement[i] == ')')
-			parenCount--;
-		//parenCount == zero suggests a fully closed statement
-		if (parenCount == 0) {
-			//subStatementL is the inner statement without parentheses
-			subStatementL = statement.substr(1, i-1);
-			break;
+	//Constant For Negation Operator Check.
+	char negValue = '~';
+	//Loop Through Current Output To Construct Expression Tree:
+	for(unsigned int k=0; k<currentOutput.size(); k++){
+		//Case 1: Operator != '~'
+		//Create New Node w/ Appropriate Previous Children.
+		if(currentExpressionParser->isOperator(currentOutput[k]) && currentOutput[k] != negValue){
+			//Compute First Previous Stack Value.
+			//= Most Recent Stack Value.
+			FirstOrderNode* prevOne = NULL;
+			if(!convertToTree.empty()){
+				prevOne = convertToTree.top();
+				convertToTree.pop();
+			}
+			//Compute Second Previous Stack Value.
+			//= Second Most Recent Stack Value.
+			FirstOrderNode* prevTwo = NULL;
+			if(!convertToTree.empty()){
+				prevTwo = convertToTree.top();
+				convertToTree.pop();
+			}
+			//Create New New Holding 'Operator' w/ Children = Two Previous Values On Stack.
+			FirstOrderNode* currentNode = new FirstOrderNode();
+			//Set Operator/Value = 'Operator'
+			currentNode->opType = currentOutput[k];
+			currentNode->value = currentOutput[k];
+			//Sanity Check: Set Default False, Negation To False.
+			currentNode->negation = false;
+			//Left Child = Eldest Recent Stack Value.
+			currentNode->left = prevTwo;
+			//Right Child = Youngest Recent Stack Value.
+			currentNode->right = prevOne;
+			//Append New Node To Stack.
+			convertToTree.push(currentNode);
+		}
+		//Case 2: Operator == '~'
+		//Do Not Create New Node.
+		//Rather Set Flag of Node To Be Negation = True;
+		else if(currentExpressionParser->isOperator(currentOutput[k]) && currentOutput[k] == negValue){
+			FirstOrderNode* prevOne = NULL;
+			if(!convertToTree.empty()){
+				prevOne = convertToTree.top();
+				convertToTree.pop();
+			}
+			//As Long As No NULL, Add prevOne w/ Flag negation = True Back To Stack.
+			if(prevOne != NULL){
+				prevOne->negation = !(prevOne->negation);
+				convertToTree.push(prevOne);
+			}
+		}
+		//Case 3: Non-Operator Atomic Statement
+		else{
+			//Set Operator Type = 'v' To Consistently Print
+			//Value Set To Name of Node (e.g., 'A', 'B', ...)
+			//Note: v' May Indicate Leaf Node?
+			FirstOrderNode* currentNode = new FirstOrderNode();
+			currentNode->value = currentOutput[k];
+			currentNode->opType = 'v';
+			//Set Negation = False As Sanity Check Once Again.
+			currentNode->negation = false;
+			//Append New Node To Stack:
+			convertToTree.push(currentNode);
 		}
 	}
-
-	//Statement is compound, find the opType
-	n->opType = statement[i+2];
-
-	//subStatementR is the inner statement without parentheses after the operation
-	std::string subStatementR = statement.substr(i+5, statement.size()-(i+5)-1);
-
-	//Give subStatementL to left node for parsing
-	n->left = new FirstOrderNode();
-
-	//Create a node for the right statement
-	n->right = new FirstOrderNode();
-
-	parseStatement(n->left, subStatementL);
-	parseStatement(n->right, subStatementR);
-} 
+	//Error Check For Random Error Edge Scenarios Unaccounted For:
+	if(convertToTree.size() != 1){
+		cout << "Error In Construction. Must Review Input/Output." << endl;
+	}
+	//Set New Head Value = Top/Root of Stack.
+	n = convertToTree.top();
+}
 
 // std::string conditional(std::string A, std::string B){
 // 	return "(" + B + ") | (~(" + A + "))";
