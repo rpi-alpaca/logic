@@ -1,5 +1,7 @@
 
 #include "statementevaluator.h"
+#include <iostream>
+using namespace std;
 
 /* evaluateStatement accepts a StatementParser (which represents a logical statement) and a vector of 
    <variablename, boolean> values. The vector of pairs represents the boolean values assigned to each 
@@ -14,7 +16,6 @@ bool StatementEvaluator::evaluateStatement(const StatementParser& s, const std::
 	for (const auto & variableTruthValue : variableTruthValues) {
 		variableValues[variableTruthValue.first] = variableTruthValue.second;
 	}
-
 	bool isTrue = evaluateBranch(s.head, variableValues);
 	return isTrue;
 }
@@ -77,6 +78,7 @@ void StatementEvaluator::recurseDownArray(const StatementParser& s, std::vector<
  */
 bool StatementEvaluator::areLogicallyEquivalent(const StatementParser& s1, const StatementParser& s2) const {
 	// NOT IMPLEMENTED
+	return true;
 }
 
 
@@ -99,8 +101,13 @@ bool StatementEvaluator::evaluateBranch(StatementNode* p, const std::unordered_m
 
 	// Node is an operation: Looks for the appropriate operation in functionMap and recurses.
 	else if (!notDetected) {
+		// unordered_map<char, std::function<bool (bool, bool)>>::const_iterator itr = functionMap.find(p -> opType);
+		// if(itr == functionMap.end()){
+		// 	cout << "Not Found" << functionMap.size() <<p -> opType << endl;
+		// 	return false;
+		// }
 		std::function<bool(bool,bool)> operation = functionMap.find(p -> opType) -> second;
-		return operation(evaluateBranch(p -> left, variableValues), evaluateBranch(p-> right, variableValues));
+		return operation(evaluateBranch(p->left, variableValues), evaluateBranch(p-> right, variableValues));
 	} else {
 		std::function<bool(bool,bool)> operation = functionMap.find(p -> opType) -> second;
 		return !operation(evaluateBranch(p -> left, variableValues), evaluateBranch(p-> right, variableValues));
