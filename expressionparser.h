@@ -12,7 +12,7 @@ public:
 	char getAssociativity(char op);
 	int getPrecedence(char op);
 	bool getGenerality(char op);
-	bool isCorrectSyntax(string input);
+	bool isCorrectSyntax(string input, unsigned int & index);
 	string formatInputValue(string currentInput);
 	string runShuntingYardAlgorithm(string str);
 };

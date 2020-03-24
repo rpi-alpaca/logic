@@ -93,7 +93,10 @@ bool ExpressionParser::getGenerality(char currentOperator){
  *      A>B>C is ambiguous because A > (B > C) != (A > B) > C
  *      A|B&C is ambiguous because A | (B & C) != (A | B) & C
  */
-bool ExpressionParser::isCorrectSyntax(string input) {
+bool ExpressionParser::isCorrectSyntax(string input, unsigned int & index) {
+    if(index >= input.length()){
+        return true;
+    }
     if(input.size() == 0) {
         cout << "Error: Input Cannot Be Empty" << endl;
         return false;
@@ -102,27 +105,42 @@ bool ExpressionParser::isCorrectSyntax(string input) {
     bool general = false;
 
     // search through the length of the string
-    for(unsigned int i = 0; i < input.length(); i++) {
-        if(input[i] == '(' || input[i] == ')'){
-            firstOp = NULL;
+    while(index < input.length()) {
+        // if subexpression found, recursively call this function on it
+        if(input[index] == '('){
+            // if subexpression not correct syntax, return false
+            index++;
+            if(!isCorrectSyntax(input, index)){
+                return false;
+            }
+        }
+        // if the current subexpression ends, return true
+        else if(input[index] == ')'){
+            index++;
+            return true;
         }
         // if an operator is found
-        if(isOperator(input[i])){
+        else if(isOperator(input[index])){
             // if it is the first operator on this level, store it
             if(firstOp == NULL) {
-                firstOp = &input[i];
+                firstOp = &input[index];
                 general = getGenerality(*firstOp);
             }
             // if it is not the first operator
             else {
                 // if it is a different operator
                 // or if the first operator is not generalizable
-                if(input[i] != *firstOp || general == false) {
-                    cout << "Error: Ambiguous Statement With Operators " << *firstOp << " and " << input[i] << endl;
+                if(input[index] != *firstOp || general == false) {
+                    cout << "Error: Ambiguous Statement With Operators " << *firstOp << " and " << input[index] << endl;
                     firstOp = NULL;
                     return false;
                 }
             }
+            index++;
+        }
+        // else if an atomic statement is found
+        else {
+            index++;
         }
     }
 
@@ -137,7 +155,12 @@ string ExpressionParser::formatInputValue(string currentInput){
             tempInput += currentChar;
         }
     }
-    if(!isCorrectSyntax(tempInput)) {
+
+//expressionparser.cpp:151:37: error: cannot bind non-const lvalue reference of type ‘unsigned int&’
+//to an rvalue of type ‘unsigned int’ if(!isCorrectSyntax(tempInput, 0)) {
+
+    unsigned int testIndex = 0;
+    if(!isCorrectSyntax(tempInput, testIndex)) {
         cout << tempInput << endl;
         //return "ERROR";
     }
