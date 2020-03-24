@@ -95,7 +95,7 @@ bool ExpressionParser::getGenerality(char currentOperator){
  */
 bool ExpressionParser::isCorrectSyntax(string input) {
     if(input.size() == 0) {
-        cout << "Error: Input cannot be empty" << endl;
+        cout << "Error: Input Cannot Be Empty" << endl;
         return false;
     }
     char* firstOp = NULL;
@@ -103,6 +103,9 @@ bool ExpressionParser::isCorrectSyntax(string input) {
 
     // search through the length of the string
     for(unsigned int i = 0; i < input.length(); i++) {
+        if(input[i] == '(' || input[i] == ')'){
+            firstOp = NULL;
+        }
         // if an operator is found
         if(isOperator(input[i])){
             // if it is the first operator on this level, store it
@@ -115,12 +118,11 @@ bool ExpressionParser::isCorrectSyntax(string input) {
                 // if it is a different operator
                 // or if the first operator is not generalizable
                 if(input[i] != *firstOp || general == false) {
-                    cout << "Error: Ambiguous Statement With operators " << *firstOp << " and " << input[i] << endl;
+                    cout << "Error: Ambiguous Statement With Operators " << *firstOp << " and " << input[i] << endl;
                     firstOp = NULL;
                     return false;
                 }
             }
-
         }
     }
 
