@@ -136,7 +136,8 @@ string ExpressionParser::formatInputValue(string currentInput){
         }
     }
     if(!isCorrectSyntax(tempInput)) {
-        return "ERROR";
+        cout << tempInput << endl;
+        //return "ERROR";
     }
     return tempInput;
     // char prevOneValue = ' ';
