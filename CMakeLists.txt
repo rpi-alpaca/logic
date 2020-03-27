@@ -21,9 +21,10 @@ add_executable(logic
 
 add_executable(logic-test
         ${expressionparser_files}
+        LogicTest.cpp
         LogicGate.cpp
         LogicGate.h
-        LogicTest.cpp
+        main.cpp
         statement.cpp
         statement.h
         statementevaluator.cpp
