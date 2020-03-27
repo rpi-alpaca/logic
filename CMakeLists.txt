@@ -4,7 +4,7 @@ project(logic)
 set(CMAKE_CXX_STANDARD 14)
 
 add_executable(logic
-	expressionparser
+        expressionparser
         LogicGate.cpp
         LogicGate.h
         main.cpp
@@ -12,7 +12,7 @@ add_executable(logic
         statement.h
         statementevaluator.cpp
         statementevaluator.h
-	Tree.cpp
+        Tree.cpp
         Tree.h)
 
 add_executable(logic-test
