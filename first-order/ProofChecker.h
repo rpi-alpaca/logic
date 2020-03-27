@@ -5,13 +5,15 @@
 #include <list>
 #include <string>
 #include "FirstOrderTree.h"
+using namespace std;
 
 class ProofChecker {
 public:
 	ProofChecker();
-	ProofChecker(std::string mainStatement);
+	ProofChecker(const string& mainStatementString);
 
-	void changeJustification(std::string just);
+	void changeJustification(const string& just);
+	void changeMainStatement(const string& mainStatementString);
 	void addChild(const FirstOrderTree& child);
 
 	bool isValid() const;
