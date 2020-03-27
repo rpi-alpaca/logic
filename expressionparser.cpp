@@ -162,7 +162,7 @@ string ExpressionParser::formatInputValue(string currentInput){
     unsigned int testIndex = 0;
     if(!isCorrectSyntax(tempInput, testIndex)) {
         cout << tempInput << endl;
-        //return "ERROR";
+        return "ERROR";
     }
     return tempInput;
     // char prevOneValue = ' ';
@@ -204,6 +204,9 @@ string ExpressionParser::runShuntingYardAlgorithm(string inputExpression){
     stack<char> opStack;
     //Formats Input String By Removing Any Spaces.
     inputExpression = formatInputValue(inputExpression);
+    if(inputExpression == "ERROR"){
+        return "ERROR";
+    }
     //Constants For Associativity Values:
     char leftValue = 'L';
     char rightValue = 'R';
