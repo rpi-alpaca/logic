@@ -62,7 +62,8 @@ int ExpressionParser::getPrecedence(char currentOperator){
 }
 
 /** Returns true if the current operator is able to be
- *  generalized and false otherwise
+ *  generalized and false otherwise.
+ *  The AND, OR, and Biconditional are generalizable.
  */
 bool ExpressionParser::getGenerality(char currentOperator){
     switch(currentOperator){
@@ -147,7 +148,7 @@ bool ExpressionParser::isCorrectSyntax(string input, unsigned int & index) {
     return true;
 }
 
-//Simply Removes ' ' From Logical Expressions.
+// Simply Removes ' ' From Logical Expressions. Then calls to check the syntax of the statement.
 string ExpressionParser::formatInputValue(string currentInput){
     string tempInput = "";
     for(char currentChar : currentInput){
@@ -155,10 +156,8 @@ string ExpressionParser::formatInputValue(string currentInput){
             tempInput += currentChar;
         }
     }
-
-//expressionparser.cpp:151:37: error: cannot bind non-const lvalue reference of type ‘unsigned int&’
-//to an rvalue of type ‘unsigned int’ if(!isCorrectSyntax(tempInput, 0)) {
-
+    // Calls isCorrectSyntax on the entire statement and returns an error if
+    // the syntax is wrong or ambiguous
     unsigned int testIndex = 0;
     if(!isCorrectSyntax(tempInput, testIndex)) {
         cout << tempInput << endl;
