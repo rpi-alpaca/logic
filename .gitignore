@@ -46,3 +46,8 @@ _deps
 
 # CLion
 .idea
+
+# WASM
+*.wasm
+logic.js
+logic-test.js

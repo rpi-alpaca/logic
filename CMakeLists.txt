@@ -3,7 +3,12 @@ project(logic)
 
 set(CMAKE_CXX_STANDARD 14)
 
+set(expressionparser_files
+        expressionparser.cpp
+        expressionparser.h)
+
 add_executable(logic
+        ${expressionparser_files}
         LogicGate.cpp
         LogicGate.h
         main.cpp
@@ -15,16 +20,14 @@ add_executable(logic
         Tree.h)
 
 add_executable(logic-test
+        ${expressionparser_files}
+        LogicTest.cpp
         LogicGate.cpp
         LogicGate.h
-        LogicTest.cpp
+        main.cpp
         statement.cpp
         statement.h
         statementevaluator.cpp
         statementevaluator.h
         Tree.cpp
         Tree.h)
-
-add_executable(expressionparser
-        expressionparser.cpp
-        expressionparser.h)
