@@ -121,7 +121,7 @@ bool ExpressionParser::isCorrectSyntax(string input, unsigned int & index) {
             return true;
         }
         // if an operator is found
-        else if(isOperator(input[index])){
+        else if(isOperator(input[index]) && input[index] != '~'){
             // if it is the first operator on this level, store it
             if(firstOp == NULL) {
                 firstOp = &input[index];
