@@ -1,4 +1,5 @@
 #include "ProofChecker.h"
+#include "FirstOrderTree.h"
 using namespace std;
 
 // Default constructor
@@ -30,3 +31,6 @@ void ProofChecker::changeMainStatement(const string& mainStatementString) {
 	// Check for validity?
 }
 
+void ProofChecker::addChild(const FirstOrderTree& child){
+	childStatements.push_back(new FirstOrderTree(child));
+}

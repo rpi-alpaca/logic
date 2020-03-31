@@ -18,7 +18,7 @@ public:
 
 	bool isValid() const;
 private:
-	FirstOrderTree mainStatement;
+	FirstOrderTree* mainStatement;
 	std::list<FirstOrderTree*> childStatements;
 	std::string justification;
 }
