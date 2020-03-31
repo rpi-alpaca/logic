@@ -4,16 +4,16 @@
 #include "FirstOrderTree.h"
 
 int main(int argc, char* argv[]){
-    // Test expression Intro
+    // Test AND Intro
     ProofChecker expression = new ProofChecker("A & B");
     expression.addChild(new FirstOrderTree("A"));
     expression.addChild(new FirstOrderTree("B"));
-    std::cout << "Result of expression Intro (A, B) => A & B: " + expression.check();
+    std::cout << "Result of AND Intro (A, B) => A & B: " + expression.check();
 
-    // Test expression Elim
+    // Test AND Elim
     expression = new ProofChecker("A");
     expression.addChild(new FirstOrderTree("A & B"));
-    std::cout << "Result of expression Elim (A & B) => A: " + expression.check();
+    std::cout << "Result of AND Elim (A & B) => A: " + expression.check();
 
     // Test OR Intro
     expression = new ProofChecker("A | B");
