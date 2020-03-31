@@ -160,7 +160,7 @@ bool ExpressionParser::isCorrectSyntax(string input, unsigned int & index) {
         else if(isOperator(input[index]) && input[index] != '~'){
             // if the checker was expecting a statement and found an operator, throw an error
             if(expectStatement) {
-                cout << "Error: Expected statement after operator but found another operator 4" << endl;
+                cout << "Error: Expected statement after operator but found another operator" << endl;
                 firstOp = NULL;
                 return false;
             }
