@@ -12,10 +12,11 @@ void statementEvaluatorTest();
 void statementParserTest();
 
 int main(int argc, char* argv[]) {
+	// Input Test
 	cout << "Start of Testing For ALPACA-LOGIC Engine." << endl;
 	string stConstructor;
 
-	cout << "Input Valid Statement of the Format (A) & (B): ";
+	cout << "Input Valid Statement of the Format A & B: ";
 	getline(cin, stConstructor);
 	StatementParser testStatement(stConstructor);
 
@@ -25,36 +26,26 @@ int main(int argc, char* argv[]) {
 	cout << "Output PrintTree() Test: " << endl;
 	testStatement.printTree();
 
-	// statementParserTest();
-	// statementEvaluatorTest();
-
 	cout << endl;
 
-
-	// string inputStatement = "~((A & B) | (C & D))";
-
 	cout << "Truth Table For " << stConstructor << ": " << endl;
-	/*
-	StatementParser evalExample(inputStatement);
-	vector<string> varTruthValues;
-	varTruthValues.push_back("A");
-	varTruthValues.push_back("B");
-	varTruthValues.push_back("C");
-	varTruthValues.push_back("D");
-	*/
+
 	StatementEvaluator eval;
 	eval.printTruthTable(testStatement);
 
 	cout << endl << endl;
 
+	// Variable Header Test
+	StatementParser headerTest("A & B & C");
+
 	vector<string> varTruthValues;
-	varTruthValues.push_back("A");
-	varTruthValues.push_back("B");
-	varTruthValues.push_back("C");
+	varTruthValues.emplace_back("Red");
+	varTruthValues.emplace_back("Green");
+	varTruthValues.emplace_back("Blue");
 
-	eval.printTruthTable(testStatement, varTruthValues);
+	eval.printTruthTable(headerTest, varTruthValues);
 
-	// Test 1
+	// Equivalence Test 1 (DeMorgan's : True)
 	StatementParser statement1("A & B");
 	cout << "\nTruth Table For " << "A & B" << ": " << endl;
 	eval.printTruthTable(statement1);
@@ -63,9 +54,9 @@ int main(int argc, char* argv[]) {
 	cout << "\nTruth Table For " << "~(~A | ~B)" << ": " << endl;
 	eval.printTruthTable(statement2);
 
-	cout << endl << "statement1 and statement2 are equal: " << boolalpha << eval.areLogicallyEquivalent(statement1, statement2) << endl << endl << endl;
+	cout << endl << "statement1 and statement2 are equal: " << boolalpha << eval.areLogicallyEquivalent(statement1, statement2) << endl << endl;
 
-	// Test 2
+	// Equivalence Test 2 (Complex : True)
 	StatementParser statement3("~(A | ~(B | (~C & D))) | (C & B) | ~A");
 	cout << "\nTruth Table For " << "~(A | ~(B | (~C & D))) | (C & B) | ~A" << ": " << endl;
 	eval.printTruthTable(statement3);
@@ -74,9 +65,9 @@ int main(int argc, char* argv[]) {
 	cout << "\nTruth Table For " << "~A | (C & B)" << ": " << endl;
 	eval.printTruthTable(statement4);
 
-	cout << endl << "statement3 and statement4 are equal: " << boolalpha << eval.areLogicallyEquivalent(statement3, statement4) << endl << endl << endl;
+	cout << endl << "statement3 and statement4 are equal: " << boolalpha << eval.areLogicallyEquivalent(statement3, statement4) << endl << endl;
 
-	// Test 3
+	// Equivalence Test 3 (Basic : False)
 	StatementParser statement5("A & B");
 	cout << "\nTruth Table For " << "A & B" << ": " << endl;
 	eval.printTruthTable(statement5);
@@ -85,7 +76,29 @@ int main(int argc, char* argv[]) {
 	cout << "\nTruth Table For " << "A & ~B" << ": " << endl;
 	eval.printTruthTable(statement6);
 
-	cout << endl << "statement5 and statement6 are equal: " << boolalpha << eval.areLogicallyEquivalent(statement5, statement6) << endl << endl << endl;
+	cout << endl << "statement5 and statement6 are equal: " << boolalpha << eval.areLogicallyEquivalent(statement5, statement6) << endl << endl;
+
+	// Equivalence Test 4 (Extra Variables : False)
+	cout << endl << "Should be false: " << boolalpha << eval.areLogicallyEquivalent(statement5, headerTest) << endl << endl;
+
+	// Memory Tests
+
+	// Assignment Operator
+	statement5 = statement6;
+	cout << "\nTruth Table For " << "A & ~B" << ": " << endl;
+	eval.printTruthTable(statement5);
+
+	// Copy Constructor
+	StatementParser statement7(statement6);
+	cout << "\nTruth Table For " << "A & ~B" << ": " << endl;
+	eval.printTruthTable(statement7);
+
+	// Join Constructor
+	StatementParser statement8("A");
+	StatementParser statement9("~B");
+	StatementParser statement10(statement8, statement9);
+	cout << "\nTruth Table For " << "A & ~B" << ": " << endl;
+	eval.printTruthTable(statement10);
 
 	return EXIT_SUCCESS;
 }

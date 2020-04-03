@@ -29,22 +29,25 @@ public:
 	//Combine Two Statements w/ Connector.
 	StatementParser(const StatementParser& s1, const StatementParser& s2);
 	StatementParser(const std::string& statement);
+	~StatementParser();
+
+	StatementParser& operator=(const StatementParser& s);
+
 	void changeHeadValue(const std::string& statement);
 	void print() const;
 	void printNode(StatementNode* s) const;
 	void printTree() const;
 	void printTreeHelper(StatementNode* s, int depth) const;
 	const vector<string>& getVariableNames() const;
-	unsigned int getNumVariables() const;
 
 private:
 	StatementNode* copy_statement(StatementNode* old_node);
+	void destroy_statement(StatementNode*& old_node);
 	void parseStatement(StatementNode*& n, const std::string& statement);
 	StatementNode* head;
 	// Stores the name of a variables inputted
 	vector<string> variableNames;
-	// Stores the number of variables
-	unsigned int numVariables;
+	
 	friend class StatementEvaluator;
 };
 

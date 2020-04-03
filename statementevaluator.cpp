@@ -37,17 +37,19 @@ void StatementEvaluator::printTruthTable(const StatementParser& s) const {
 
    It prints out a truth table containing the evaluation of the statement for all possible boolean assignments
    for the variables.
+
+   Allows for custom variable header names.
  */
 void StatementEvaluator::printTruthTable(const StatementParser& s, const std::vector<std::string>& variableNames) const {
 	unsigned int maxStringSize = 0;
 	std::vector<std::pair<std::string, bool> > variableTruthValues;
-	for (const auto & variableName : variableNames) {
+	for (const auto & variableName : s.getVariableNames()) {
 		variableTruthValues.emplace_back(variableName, false);
 		if (maxStringSize < variableName.size())
 			maxStringSize = variableName.size();
 	}
 
-	// In the case that the variable headers are 
+	// In the case that the variable headers are too small
 	maxStringSize = (maxStringSize < 5) ? 5 : maxStringSize;
 
 	printVariableHeaders(variableNames, maxStringSize);
@@ -92,6 +94,7 @@ bool StatementEvaluator::areLogicallyEquivalent(const StatementParser& s1, const
 	for (const auto & variableName : s1.getVariableNames()) {
 		s1Variables.emplace_back(variableName, false);
 	}
+	// Lines up all of the variable names
 	sort(s1Variables.begin(), s1Variables.end(), sortByVariableName);
 
 	// Set up Variable Truth Values for s2
@@ -99,6 +102,7 @@ bool StatementEvaluator::areLogicallyEquivalent(const StatementParser& s1, const
 	for (const auto & variableName : s2.getVariableNames()) {
 		s2Variables.emplace_back(variableName, false);
 	}
+	// Lines up all of the variable names
 	sort(s2Variables.begin(), s2Variables.end(), sortByVariableName);
 
 	// Find the variables that only appear in one of the equations
@@ -106,17 +110,34 @@ bool StatementEvaluator::areLogicallyEquivalent(const StatementParser& s1, const
 	std::vector<std::pair<std::string, bool> >::const_iterator s1_itr = s1Variables.begin();
 	std::vector<std::pair<std::string, bool> >::const_iterator s2_itr = s2Variables.begin();
 
-	while(s1_itr != s1Variables.end() || s2_itr != s2Variables.end()) {
+	while(s1_itr != s1Variables.end() && s2_itr != s2Variables.end()) {
+		// Variable is in both statements
 		if(s1_itr->first == s2_itr->first) {
 			++s1_itr;
 			++s2_itr;
-		} else if(s1_itr != s1Variables.end()) {
+		} 
+		// Variable from s1 comes first
+		else if(s1_itr->first < s2_itr->first) {
 			difference.emplace_back(s1_itr->first);
 			++s1_itr;
-		} else {
+		} 
+		// Variable from s2 comes first
+		else {
 			difference.emplace_back(s2_itr->first);
 			++s2_itr;
 		}
+	}
+
+	// Leftover variables from s1
+	while(s1_itr != s1Variables.end()) {
+		difference.emplace_back(s1_itr->first);
+		++s1_itr;
+	}
+
+	// Leftover variables from s2
+	while(s2_itr != s2Variables.end()) {
+		difference.emplace_back(s2_itr->first);
+		++s2_itr;
 	}
 
 	return areLogicallyEquivalent(s1, s2, s1Variables, s2Variables, 0, 0, difference, 0);
@@ -126,6 +147,12 @@ bool StatementEvaluator::areLogicallyEquivalent(const StatementParser& s1, const
  * Requires: s1, s2 are non-null
  * Effects: Nothing
  * Returns: True if s1, s2 are logically equivalent. Otherwise, false.
+ *	
+ * The statements s1 and s2 are needed to evaluate the statement once the all of the variables' values have been set
+ * The vectors s1Variables and s2Variables are needed to keep track of the variables' values
+ * THe integers s1Index and s2Index keep track of the position within the vectors s1Variables and s2Variables, respectively
+ * The vector difference contains all variables that appear in only one of the vectors
+ * The integer dIndex keeps track of the positon within the vector difference
  */
 bool StatementEvaluator::areLogicallyEquivalent(const StatementParser& s1, const StatementParser& s2, 
 	std::vector<std::pair<std::string, bool> >& s1Variables, std::vector<std::pair<std::string, bool> >& s2Variables, 
