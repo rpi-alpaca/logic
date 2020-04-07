@@ -1,0 +1,12 @@
+on: [push]
+
+jobs:
+    wasm_logic_job:
+        runs-on: ubuntu-latest
+        name: Tests building the Emscripten/WebAssembly logic backend
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+            - name: Build
+              run: |
+                sh ./wasm_build.sh
