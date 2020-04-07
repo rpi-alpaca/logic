@@ -29,7 +29,8 @@ public:
 	StatementParser(const std::string& statement);
 	void changeHeadValue(const std::string& statement);
 	void print() const;
-	void printNode(StatementNode* s) const;
+	void print(std::ostream& o) const;
+	void printNode(StatementNode* s, std::ostream& o) const;
 	void printTree() const;
 	void printTreeHelper(StatementNode* s, int depth) const;
 

@@ -40,33 +40,37 @@ void StatementParser::changeHeadValue(const std::string& statement) {
 
 //In-Order Traversal Printing of Expression Tree:
 void StatementParser::print() const {
+	print(std::cout);
+}
+
+void StatementParser::print(std::ostream& o) const {
 	//Invokes Helper Function:
-	printNode(head);
-	std::cout << std::endl;
+	printNode(head, o);
+	o << std::endl;
 }
 
 //Helper Function For print():
-void StatementParser::printNode(StatementNode* s) const {
+void StatementParser::printNode(StatementNode* s, std::ostream& o) const {
 	if(!s){
 		return;
 	}
 	//If Negation Node, Append Negation Prior To Printing Value
 	if(s->negation){
-		cout << "~";
+		o << "~";
 	}
 	//Case 1: Not Operator, Simply Print Value.
 	if(s->opType == 'v'){
-		cout << s->value;
+		o << s->value;
 	}
 	//Case 2: Operator
 	//Simply Print Left Child + Current Value Operator + Right Child.
 	else{
-		cout << '(';
-		printNode(s->left);
-		cout << " ";
-		cout << s->value << " ";
-		printNode(s->right);
-		cout << ")";
+		o << '(';
+		printNode(s->left, o);
+		o << " ";
+		o << s->value << " ";
+		printNode(s->right, o);
+		o << ")";
 	}
 }
 
