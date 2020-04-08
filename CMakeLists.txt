@@ -9,9 +9,9 @@ set(expressionparser_files
 
 add_executable(logic
         ${expressionparser_files}
-        LogicGate.cpp
-        LogicGate.h
         main.cpp
+	LogicGate.cpp
+        LogicGate.h
         statement.cpp
         statement.h
         statementevaluator.cpp
@@ -24,7 +24,6 @@ add_executable(logic-test
         LogicTest.cpp
         LogicGate.cpp
         LogicGate.h
-        main.cpp
         statement.cpp
         statement.h
         statementevaluator.cpp

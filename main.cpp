@@ -8,54 +8,31 @@
 #include "Tree.h"
 using namespace std;
 
-void statementEvaluatorTest();
-void statementParserTest();
+void defaultTest() {
+	// Input Test
+	cout << "Start of Testing For ALPACA-LOGIC Engine." << endl;
+	string stConstructor;
 
-void defaultTest();
-void variableHeaderTest();
-void equivalenceTest();
-void memoryTest();
+	cout << "Input Valid Statement of the Format A & B: ";
+	getline(cin, stConstructor);
+	StatementParser testStatement(stConstructor);
+
+	cout << endl;
+	cout << "Output Print() Test:" << endl;
+	testStatement.print();
+	cout << "Output PrintTree() Test: " << endl;
+	testStatement.printTree();
+
+	cout << endl;
+
+	cout << "Truth Table For " << stConstructor << ": " << endl;
+	StatementEvaluator eval;
+	eval.printTruthTable(testStatement);
+	cout << endl;
+}
 
 int main(int argc, char* argv[]) {
-	
 	defaultTest();
-	variableHeaderTest();
-	equivalenceTest();
-	memoryTest();
 	
 	return EXIT_SUCCESS;
-}
-
-void statementParserTest() {
-	cout << endl;
-	cout << "Running Statement Parser Test." << endl << endl;
-
-	StatementParser state1;
-	StatementParser state2;
-	state1.changeHeadValue("The Sky Is Blue");
-	state2.changeHeadValue("Hali's Shirt Is Blue");
-	StatementParser combined(state1, state2);
-
-	state1.print();
-	state2.print();
-	combined.print();
-}
-
-void statementEvaluatorTest() {
-	cout << endl;
-	cout << "Running Statement Evaluator Test." << endl << endl;
-
-	StatementParser state1;
-	StatementParser state2;
-	state1.changeHeadValue("The Sky Is Blue");
-	state2.changeHeadValue("Hali's Shirt Is Blue");
-	StatementParser combined(state1, state2);
-
-	vector<string> variables;
-	variables.emplace_back("The Sky Is Blue");
-	variables.emplace_back("Hali's Shirt Is Blue");
-
-	// Testing printTruthTable and evaluateStatement
-	StatementEvaluator eval;
-	eval.printTruthTable(combined, variables);
 }

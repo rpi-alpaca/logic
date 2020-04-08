@@ -1,79 +1,97 @@
 //LogicTest.cpp
+#include "statementevaluator.h"
+#include "LogicGate.h"
+#include "expressionparser.h"
+#include "Tree.h"
+using namespace std;
 
 #include "LogicGate.h"
+void variableHeaderTest() {
+	cout << "---------- VARIABLE HEADER TEST ----------\n\n";
 
-// int main() {
-// 	LogicGate newLogic;
+	StatementEvaluator eval;
 
-// 	newLogic.asciiDraw();
-// 	newLogic.addStatement('A');
-// 	newLogic.asciiDraw();
+	// Variable Header Test
+	StatementParser headerTest("A & B & C");
 
-// 	newLogic.changeOnOff('A', false);
-// 	newLogic.changeOnOff('B', false);
-// 	newLogic.asciiDraw();
+	vector<string> varTruthValues;
+	varTruthValues.emplace_back("Red");
+	varTruthValues.emplace_back("Green");
+	varTruthValues.emplace_back("Blue");
 
-// 	newLogic.addStatement('B');
-// 	newLogic.asciiDraw();
+	eval.printTruthTable(headerTest, varTruthValues);
+	cout << endl;
+}
 
-// 	newLogic.removeStatement('B');
-// 	newLogic.asciiDraw();
+void equivalenceTest() {
+	cout << "---------- EQUIVALENCE TEST ----------\n\n";
+	StatementEvaluator eval;
+	// Equivalence Test 1 (DeMorgan's : True)
+	StatementParser statement1("A & B");
+	cout << "\nTruth Table For " << "A & B" << ": " << endl;
+	eval.printTruthTable(statement1);
 
-// 	newLogic.removeStatement('C');
-// 	newLogic.asciiDraw();
+	StatementParser statement2("~(~A | ~B)");
+	cout << "\nTruth Table For " << "~(~A | ~B)" << ": " << endl;
+	eval.printTruthTable(statement2);
 
-// 	std::string rawAction;
-// 	char newState;
-// 	bool operSucc, stateChange;
-// 	int operationDo;
+	cout << endl << "statement1 and statement2 are equal: " << boolalpha << eval.areLogicallyEquivalent(statement1, statement2) << endl << endl;
 
-// 	newLogic.clearStates();
+	// Equivalence Test 2 (Complex : True)
+	StatementParser statement3("~(A | ~(B | (~C & D))) | (C & B) | ~A");
+	cout << "\nTruth Table For " << "~(A | ~(B | (~C & D))) | (C & B) | ~A" << ": " << endl;
+	eval.printTruthTable(statement3);
 
-// 	while (true) {
-// 		newLogic.asciiDraw();
+	StatementParser statement4("~A | (C & B)");
+	cout << "\nTruth Table For " << "~A | (C & B)" << ": " << endl;
+	eval.printTruthTable(statement4);
 
-// 		std::cout << "Type an operation to do" << std::endl;
-// 		std::cout << "0: Break, 1: Add Statement 2: Remove Statement 3: ChangeState" << std::endl;
-// 		std::cin >> rawAction;
+	cout << endl << "statement3 and statement4 are equal: " << boolalpha << eval.areLogicallyEquivalent(statement3, statement4) << endl << endl;
 
-// 		if (isdigit(rawAction[0])) {
-//             operationDo = stoi(rawAction);
-//         } else {
-// 			std::cout << "Not a number operation" << std::endl;
-// 			continue;
-// 		}
+	// Equivalence Test 3 (Basic : False)
+	StatementParser statement5("A & B");
+	cout << "\nTruth Table For " << "A & B" << ": " << endl;
+	eval.printTruthTable(statement5);
 
-// 		if (operationDo == 0) {
-// 			std::cout << "Goodbye!" << std::endl;
-// 			return 0;
-// 		} else if (operationDo == 1) {
-// 			std::cout << "Type a statement to add" << std::endl;
-// 			std::cin >> newState;
+	StatementParser statement6("A & ~B");
+	cout << "\nTruth Table For " << "A & ~B" << ": " << endl;
+	eval.printTruthTable(statement6);
 
-// 			operSucc = newLogic.addStatement(newState);
+	cout << endl << "statement5 and statement6 are equal: " << boolalpha << eval.areLogicallyEquivalent(statement5, statement6) << endl << endl;
+}
 
-// 			if (!operSucc)
-// 			    std::cout << "Sorry Couldn't Add!" << std::endl;
-// 		} else if (operationDo == 2) {
-// 			std::cout << "Type a statement to remove" << std::endl;
-// 			std::cin >> newState;
+void memoryTest() {
+	cout << "---------- MEMORY TEST ----------\n\n";
 
-// 			operSucc = newLogic.removeStatement(newState);
+	StatementEvaluator eval;
 
-// 			if (!operSucc)
-// 			    std::cout << "Sorry Couldn't Remove!" << std::endl;
-// 		} else if (operationDo == 3) {
-// 			std::cout << "Type a statement to change" << std::endl;
-// 			std::cin >> newState;
-// 			std::cout << "Type state to change (true/false)" << std::endl;
-// 			std::cin >> std::boolalpha >> stateChange;
+	StatementParser statement1("A & ~B");
+	StatementParser statement2("A & B");
 
-// 			//Function includes error message
-// 			newLogic.changeOnOff(newState, stateChange);
-// 		} else {
-// 			std::cerr << "Not a viable action" << std::endl;
-// 		}
-// 	}
+	// Assignment Operator
+	statement2 = statement1;
+	cout << "\nShould Be Truth Table For " << "A & ~B" << ": " << endl;
+	eval.printTruthTable(statement2);
 
-// 	return 0;
-// }
+	// Copy Constructor
+	StatementParser statement3(statement2);
+	cout << "\nShould Be Truth Table For " << "A & ~B" << ": " << endl;
+	eval.printTruthTable(statement3);
+
+	// Join Constructor
+	StatementParser statement4("A");
+	StatementParser statement5("~B");
+	StatementParser statement6(statement4, statement5);
+	cout << "\nShould Be Truth Table For " << "A & ~B" << ": " << endl;
+	eval.printTruthTable(statement6);
+	cout << endl;
+}
+
+int main() {
+
+    variableHeaderTest();
+	equivalenceTest();
+	memoryTest();
+
+    return EXIT_SUCCESS;
+}
