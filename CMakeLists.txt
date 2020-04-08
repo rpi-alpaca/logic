@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.10)
 project(logic)
 
 set(CMAKE_CXX_STANDARD 14)
+set(COMPILE_FLAGS    "-Wextra -Werror")
+set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${COMPILE_FLAGS}")
 
 set(expressionparser_files
         expressionparser.cpp
