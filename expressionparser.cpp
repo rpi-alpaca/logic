@@ -61,13 +61,159 @@ int ExpressionParser::getPrecedence(char currentOperator){
     }
 }
 
-//Simply Removes ' ' From Logical Expressions.
+/** Returns true if the current operator is able to be
+ *  generalized and false otherwise.
+ *  The AND, OR, and Biconditional are generalizable.
+ */
+bool ExpressionParser::getGenerality(char currentOperator){
+    switch(currentOperator){
+        case '&':
+            return true;
+        case '|':
+            return true;
+        case '=':
+            return true;
+        case '>':
+            return false;
+        case '~':
+            return false;  
+        default:
+            return false;
+    }
+}
+
+/** Checks if the syntax of the input string is correct
+ *  Returns true if so, and false if incorrect or syntax
+ *  is ambiguous
+ *  Ambiguous syntax is defined as any generalized expression
+ *  that could result in two different expressions given different
+ *  orders of operations on the generalized operations.
+ *  
+ *  Ex:
+ *      A|B|C is not ambiguous because A | (B | C) = (A | B) | C
+ *      A>B>C is ambiguous because A > (B > C) != (A > B) > C
+ *      A|B&C is ambiguous because A | (B & C) != (A | B) & C
+
+    Ex Test Cases:
+    A & ~B              is not ambiguous
+    (A & ~B) > (C | D)  is not ambiguous
+    (A & ~(B|C)) > ~D   is not ambiguous
+    A & ~ & C           is ambiguous        "Error: Expected statement after operator but found another operator"
+ */
+bool ExpressionParser::isCorrectSyntax(string input, unsigned int & index) {
+    if(index >= input.length()){
+        return true;
+    }
+    if(input.size() == 0) {
+        cout << "Error: Input Cannot Be Empty" << endl;
+        return false;
+    }
+    // firstOP holds the first operator found on a line, which will be compared to all future operators
+    char* firstOp = NULL;
+    // general holds the generality of he first operator that is found
+    bool general = false;
+    // expectStatement is true when the checker will expect a statement next, denoted by an atomic statement or a '('
+    // when true, the algorithm can also expect the NOT operator, to handle cases such as (A & ~B)
+    // expectStatement is false when the checker will be expecting an operator next (excluding the NOT operator)
+    bool expectStatement = true;
+
+    // search through the length of the string
+    while(index < input.length()) {
+        // if subexpression found, recursively call this function on it
+        if(input[index] == '('){
+            // if the checker was expecting an operator and found a statement, throw an error
+            if(!expectStatement) {
+                cout << "Error: Expected operator after statement but found a statement" << endl;
+                firstOp = NULL;
+                return false;
+            }
+            // if subexpression not correct syntax, return false
+            index++;
+            // after finding a statement, expectStatment is changed
+            expectStatement = false;
+            if(!isCorrectSyntax(input, index)){
+                return false;
+            }
+        }
+        // if the current subexpression ends, return true
+        else if(input[index] == ')'){
+            // if the checker was expecting a statment and found a ')', throw an error
+            if(expectStatement) {
+                cout << "Error: Expected statement after operator but found closed parentheses" << endl;
+                firstOp = NULL;
+                return false;
+            }
+            index++;
+            return true;
+        }
+        // if the NOT operator is found
+        else if(input[index] == '~') {
+            // if the checker was expecting a non-NOT operator and found a NOT, throw an error
+            if(!expectStatement) {
+                cout << "Error: Expected non-NOT operator after statement but found a NOT operator" << endl;
+                firstOp = NULL;
+                return false;
+            }
+            index++;
+        }
+        // if an operator is found that is not the NOT operator
+        else if(isOperator(input[index]) && input[index] != '~'){
+            // if the checker was expecting a statement and found an operator, throw an error
+            if(expectStatement) {
+                cout << "Error: Expected statement after operator but found another operator" << endl;
+                firstOp = NULL;
+                return false;
+            }
+            // after finding an operator, expectStatment is changed
+            expectStatement = true;
+            // if it is the first operator on this level, store it
+            if(firstOp == NULL) {
+                firstOp = &input[index];
+                general = getGenerality(*firstOp);
+            }
+            // if it is not the first operator
+            else {
+                // if it is a different operator
+                // or if the first operator is not generalizable
+                if(input[index] != *firstOp || general == false) {
+                    cout << "Error: Ambiguous Statement With Operators " << *firstOp << " and " << input[index] << endl;
+                    firstOp = NULL;
+                    return false;
+                }
+            }
+            index++;
+        }
+        // else if an atomic statement is found
+        else {
+            // if the checker was expecting an operator and found an atomic statement, throw an error
+            if(!expectStatement) {
+                cout << "Error: Expected operator after statement but found atomic statment" << endl;
+                firstOp = NULL;
+                return false;
+            }
+            // after finding a statement, expectStatment is changed
+            expectStatement = false;
+            index++;
+        }
+    }
+
+    return true;
+}
+
+// Simply Removes ' ' From Logical Expressions. Then calls to check the syntax of the statement.
 string ExpressionParser::formatInputValue(string currentInput){
     string tempInput = "";
     for(char currentChar : currentInput){
         if(currentChar != ' '){
             tempInput += currentChar;
         }
+    }
+    // Calls isCorrectSyntax on the entire statement and returns an error if
+    // the syntax is wrong or ambiguous
+    unsigned int testIndex = 0;
+    if(!isCorrectSyntax(tempInput, testIndex)) {
+        cout << tempInput << endl;
+        return "ERROR";
     }
     return tempInput;
     // char prevOneValue = ' ';
@@ -109,6 +255,9 @@ string ExpressionParser::runShuntingYardAlgorithm(string inputExpression){
     stack<char> opStack;
     //Formats Input String By Removing Any Spaces.
     inputExpression = formatInputValue(inputExpression);
+    if(inputExpression == "ERROR"){
+        return "ERROR";
+    }
     //Constants For Associativity Values:
     char leftValue = 'L';
     char rightValue = 'R';
