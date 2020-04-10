@@ -54,13 +54,28 @@ bool ProofChecker::isValid() const{
     }
 
     if(justification=="&I"){
-        // AND INTRO
+        //AND Introduction:
         FirstOrderTree* child1;
         FirstOrderTree* child2;
+        //Start At Begininng of Children Statements:
         std::list<FirstOrderTree*>::const_iterator itr = childStatements.begin();
         child1 = *itr;
         itr++;
         child2 = *itr;
+        //Get Head of Main Statement:
+        FirstOrderNode* root = mainStatement.getHeadNode();
+        if(root->left != child1.getHeadNode()){
+            if(root->left != child2.getHeadNode()){
+                return false;
+            }
+            else{
+                return root->right == child1.getHeadNode(); 
+            }
+        }
+        else{
+            return root->right == child2.getHeadNode();
+        }
+
     }
 
     if(justification=="&E"){
