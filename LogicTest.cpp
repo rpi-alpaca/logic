@@ -88,10 +88,9 @@ void memoryTest() {
 }
 
 int main() {
-
-    variableHeaderTest();
+	variableHeaderTest();
 	equivalenceTest();
 	memoryTest();
 
-    return EXIT_SUCCESS;
+	return EXIT_SUCCESS;
 }
