@@ -23,8 +23,8 @@ class StatementEvaluator {
 		void printTruthTable(const StatementParser& s, const std::vector<std::string>& variableNames) const;
 		bool areLogicallyEquivalent(const StatementParser& s1, const StatementParser& s2) const;
 		bool areLogicallyEquivalent(const StatementParser& s1, const StatementParser& s2, 
-	std::vector<std::pair<std::string, bool> >& s1Variables, std::vector<std::pair<std::string, bool> >& s2Variables, 
-	unsigned int s1Index, unsigned int s2Index, const vector<string>& difference, unsigned int dIndex) const;
+		std::vector<std::pair<std::string, bool> >& s1Variables, std::vector<std::pair<std::string, bool> >& s2Variables, 
+		unsigned int s1Index, unsigned int s2Index, const vector<string>& difference, unsigned int dIndex) const;
 
 	private:
 		// Mapping of operation characters to the corresponding functions.
