@@ -1,65 +1,37 @@
-// this is the main file for the logic team
-
-
-/*
-	This is a program that will take in a logical statement and do various functions
-	
-*/
-
+//This is the Main File for the Logic Team.
+//Currently, this is simply a Command-Line Interface to be Integrated with the Frontend GUI.
+//That is, this is a Program that will take in a Logical Statement + Perform Various Operations.
 
 #include "statementevaluator.h"
 #include "LogicGate.h"
+#include "expressionparser.h"
 #include "Tree.h"
+using namespace std;
 
+void defaultTest() {
+	// Input Test
+	cout << "Start of Testing For ALPACA-LOGIC Engine." << endl;
+	string stConstructor;
 
-void statementEvaluatorTest();
-void statementParserTest();
-
-int main(int argc, char* argv[]) {
-	std::cout << "Testing" << std::endl;
-
-	std::string stConstructor;
-	std::cout << "Input a statement of format (A) & (B): ";
-	std::getline(std::cin, stConstructor);
-
+	cout << "Input Valid Statement of the Format A & B: ";
+	getline(cin, stConstructor);
 	StatementParser testStatement(stConstructor);
+
+	cout << endl;
+	cout << "Output Print() Test:" << endl;
 	testStatement.print();
+	cout << "Output PrintTree() Test: " << endl;
 	testStatement.printTree();
 
-	statementParserTest();
-	statementEvaluatorTest();
+	cout << endl;
 
-	return 0;
-}
-
-void statementParserTest() {
-	std::cout << "RUNNING STATEMENTPARSERTEST" << std::endl << std::endl;
-
-	StatementParser state1;
-	StatementParser state2;
-	state1.changeHeadValue("The sky is blue");
-	state2.changeHeadValue("Hali's shirt is blue");
-	StatementParser combined(state1, state2);
-
-	state1.print();
-	state2.print();
-	combined.print();
-}
-
-void statementEvaluatorTest() {
-	std::cout << "RUNNING STATEMENTEVALUATORTEST" << std::endl << std::endl;
-
-	StatementParser state1;
-	StatementParser state2;
-	state1.changeHeadValue("The sky is blue");
-	state2.changeHeadValue("Hali's shirt is blue");
-	StatementParser combined(state1, state2);
-
-	std::vector<std::string> variables;
-	variables.emplace_back("The sky is blue");
-	variables.emplace_back("Hali's shirt is blue");
-
-	// Testing printTruthTable and evaluateStatement
+	cout << "Truth Table For " << stConstructor << ": " << endl;
 	StatementEvaluator eval;
-	eval.printTruthTable(combined, variables);
+	eval.printTruthTable(testStatement);
+	cout << endl;
+}
+
+int main(int argc, char* argv[]) {
+	defaultTest();
+	return EXIT_SUCCESS;
 }

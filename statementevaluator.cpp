@@ -1,5 +1,8 @@
 
 #include "statementevaluator.h"
+#include <iostream>
+#include <algorithm>
+using namespace std;
 
 /* evaluateStatement accepts a StatementParser (which represents a logical statement) and a vector of 
    <variablename, boolean> values. The vector of pairs represents the boolean values assigned to each 
@@ -14,26 +17,40 @@ bool StatementEvaluator::evaluateStatement(const StatementParser& s, const std::
 	for (const auto & variableTruthValue : variableTruthValues) {
 		variableValues[variableTruthValue.first] = variableTruthValue.second;
 	}
-
 	bool isTrue = evaluateBranch(s.head, variableValues);
 	return isTrue;
 }
 
+
+/* Helper function that only receives a StatmentParser and 
+   automatically retrieves the variable names on its own.
+
+   The full implementation of printTruthTable is called within
+   this function.
+ */
+void StatementEvaluator::printTruthTable(const StatementParser& s) const {
+	printTruthTable(s, s.getVariableNames());
+}
 
 /* printTruthTable accepts a StatementParser (logical statement) and a vector containing all the variable names
    in that StatementParser.
 
    It prints out a truth table containing the evaluation of the statement for all possible boolean assignments
    for the variables.
+
+   Allows for custom variable header names.
  */
 void StatementEvaluator::printTruthTable(const StatementParser& s, const std::vector<std::string>& variableNames) const {
 	unsigned int maxStringSize = 0;
 	std::vector<std::pair<std::string, bool> > variableTruthValues;
-	for (const auto & variableName : variableNames) {
-		variableTruthValues.emplace_back(variableName, true);
+	for (const auto & variableName : s.getVariableNames()) {
+		variableTruthValues.emplace_back(variableName, false);
 		if (maxStringSize < variableName.size())
 			maxStringSize = variableName.size();
 	}
+
+	// In the case that the variable headers are too small
+	maxStringSize = (maxStringSize < 5) ? 5 : maxStringSize;
 
 	printVariableHeaders(variableNames, maxStringSize);
 
@@ -44,9 +61,9 @@ void StatementEvaluator::printTruthTable(const StatementParser& s, const std::ve
    By default, each column is of size maxStringSize */
 void StatementEvaluator::printVariableHeaders(const std::vector<std::string>& variableNames, int maxStringSize) const{
 	for (const auto & variableName : variableNames) {
-		std::cout << std::setw(maxStringSize) << std::left << variableName << " ";
+		std::cout << std::setw(maxStringSize) << std::left << variableName << "  ";
 	}
-	std::cout << std::endl;
+	std::cout << "|  Result" << std::endl;
 }
 
 /* recurseDownArray is a private function which accepts a StatementParser and a vector with <string, bool> pairs, 
@@ -58,26 +75,136 @@ void StatementEvaluator::printVariableHeaders(const std::vector<std::string>& va
 void StatementEvaluator::recurseDownArray(const StatementParser& s, std::vector<std::pair<std::string, bool> >& variableTruthValues, unsigned int index, unsigned int maxStringSize) const {
 	if (index == variableTruthValues.size()) {
 		for (auto & variableTruthValue : variableTruthValues) {
-			std::cout << std::setw(maxStringSize) << std::boolalpha << std::left << variableTruthValue.second << " ";
+			std::cout << std::setw(maxStringSize) << std::boolalpha << std::left << variableTruthValue.second << "  ";
 		}
-		std::cout << evaluateStatement(s, variableTruthValues) << std::endl;
+		std::cout << "|  " <<  evaluateStatement(s, variableTruthValues) << std::endl;
 	} else {
 		recurseDownArray(s, variableTruthValues, index + 1, maxStringSize);
-		variableTruthValues[index].second = false;
-		recurseDownArray(s, variableTruthValues, index + 1, maxStringSize);
 		variableTruthValues[index].second = true;
+		recurseDownArray(s, variableTruthValues, index + 1, maxStringSize);
+		variableTruthValues[index].second = false;
 	}
 }
 
+
+
+bool StatementEvaluator::areLogicallyEquivalent(const StatementParser& s1, const StatementParser& s2) const {
+	// Set up Variable Truth Values for s1
+	std::vector<std::pair<std::string, bool> > s1Variables;
+	for (const auto & variableName : s1.getVariableNames()) {
+		s1Variables.emplace_back(variableName, false);
+	}
+	// Lines up all of the variable names
+	sort(s1Variables.begin(), s1Variables.end(), sortByVariableName);
+
+	// Set up Variable Truth Values for s2
+	std::vector<std::pair<std::string, bool> > s2Variables;
+	for (const auto & variableName : s2.getVariableNames()) {
+		s2Variables.emplace_back(variableName, false);
+	}
+	// Lines up all of the variable names
+	sort(s2Variables.begin(), s2Variables.end(), sortByVariableName);
+
+	// Find the variables that only appear in one of the equations
+	std::vector<std::string> difference;
+	std::vector<std::pair<std::string, bool> >::const_iterator s1_itr = s1Variables.begin();
+	std::vector<std::pair<std::string, bool> >::const_iterator s2_itr = s2Variables.begin();
+
+	while(s1_itr != s1Variables.end() && s2_itr != s2Variables.end()) {
+		// Variable is in both statements
+		if(s1_itr->first == s2_itr->first) {
+			++s1_itr;
+			++s2_itr;
+		} 
+		// Variable from s1 comes first
+		else if(s1_itr->first < s2_itr->first) {
+			difference.emplace_back(s1_itr->first);
+			++s1_itr;
+		} 
+		// Variable from s2 comes first
+		else {
+			difference.emplace_back(s2_itr->first);
+			++s2_itr;
+		}
+	}
+
+	// Leftover variables from s1
+	while(s1_itr != s1Variables.end()) {
+		difference.emplace_back(s1_itr->first);
+		++s1_itr;
+	}
+
+	// Leftover variables from s2
+	while(s2_itr != s2Variables.end()) {
+		difference.emplace_back(s2_itr->first);
+		++s2_itr;
+	}
+
+	return areLogicallyEquivalent(s1, s2, s1Variables, s2Variables, 0, 0, difference, 0);
+}
 
 /* areLogicallyEquivalent
  * Requires: s1, s2 are non-null
  * Effects: Nothing
  * Returns: True if s1, s2 are logically equivalent. Otherwise, false.
+ *	
+ * The statements s1 and s2 are needed to evaluate the statement once the all of the variables' values have been set
+ * The vectors s1Variables and s2Variables are needed to keep track of the variables' values
+ * THe integers s1Index and s2Index keep track of the position within the vectors s1Variables and s2Variables, respectively
+ * The vector difference contains all variables that appear in only one of the vectors
+ * The integer dIndex keeps track of the positon within the vector difference
  */
-bool StatementEvaluator::areLogicallyEquivalent(const StatementParser& s1, const StatementParser& s2) const {
-	// NOT IMPLEMENTED
+bool StatementEvaluator::areLogicallyEquivalent(const StatementParser& s1, const StatementParser& s2, 
+	std::vector<std::pair<std::string, bool> >& s1Variables, std::vector<std::pair<std::string, bool> >& s2Variables, 
+	unsigned int s1Index, unsigned int s2Index, const vector<string>& difference, unsigned int dIndex) const {
+	
+	// Both statments have variables left to set
+	if(s1Index < s1Variables.size() && s2Index < s2Variables.size() && s1Variables[s1Index].first == s2Variables[s2Index].first){
+		bool outcome_1 = areLogicallyEquivalent(s1, s2, s1Variables, s2Variables, s1Index + 1, s2Index + 1, difference, dIndex);
+		s1Variables[s1Index].second = true;
+		s2Variables[s2Index].second = true;
+		if(!outcome_1) {
+			return false;
+		}
+
+		bool outcome_2 = areLogicallyEquivalent(s1, s2, s1Variables, s2Variables, s1Index + 1, s2Index + 1, difference, dIndex);
+		s1Variables[s1Index].second = false;
+		s2Variables[s2Index].second = false;
+		return outcome_2;
+	} 
+
+	// s1 still has variables left to set
+	else if(s1Index < s1Variables.size() && dIndex < difference.size() && s1Variables[s1Index].first == difference[dIndex]) {
+		bool outcome_1 = areLogicallyEquivalent(s1, s2, s1Variables, s2Variables, s1Index + 1, s2Index, difference, dIndex + 1);
+		s1Variables[s1Index].second = true;
+		if(!outcome_1) {
+			return false;
+		}
+
+		bool outcome_2 = areLogicallyEquivalent(s1, s2, s1Variables, s2Variables, s1Index + 1, s2Index, difference, dIndex + 1);
+		s1Variables[s1Index].second = false;
+		return outcome_2;
+	}
+
+	// s2 still has variables left to set
+	else if(s2Index < s2Variables.size() && dIndex < difference.size() && s2Variables[s2Index].first == difference[dIndex]) {
+		bool outcome_1 = areLogicallyEquivalent(s1, s2, s1Variables, s2Variables, s1Index, s2Index + 1, difference, dIndex + 1);
+		s2Variables[s2Index].second = true;
+		if(!outcome_1) {
+			return false;
+		}
+
+		bool outcome_2 = areLogicallyEquivalent(s1, s2, s1Variables, s2Variables, s1Index, s2Index + 1, difference, dIndex + 1);
+		s2Variables[s2Index].second = false;
+		return outcome_2;
+	}
+
+	// All variables have been set
+	else {
+		return evaluateStatement(s1, s1Variables) == evaluateStatement(s2, s2Variables);
+	}
 }
+
 
 
 /* evaluateBranch is a private function that takes a node to the head of a StatementParser and evaluates the
@@ -99,8 +226,13 @@ bool StatementEvaluator::evaluateBranch(StatementNode* p, const std::unordered_m
 
 	// Node is an operation: Looks for the appropriate operation in functionMap and recurses.
 	else if (!notDetected) {
+		// unordered_map<char, std::function<bool (bool, bool)>>::const_iterator itr = functionMap.find(p -> opType);
+		// if(itr == functionMap.end()){
+		// 	cout << "Not Found" << functionMap.size() <<p -> opType << endl;
+		// 	return false;
+		// }
 		std::function<bool(bool,bool)> operation = functionMap.find(p -> opType) -> second;
-		return operation(evaluateBranch(p -> left, variableValues), evaluateBranch(p-> right, variableValues));
+		return operation(evaluateBranch(p->left, variableValues), evaluateBranch(p-> right, variableValues));
 	} else {
 		std::function<bool(bool,bool)> operation = functionMap.find(p -> opType) -> second;
 		return !operation(evaluateBranch(p -> left, variableValues), evaluateBranch(p-> right, variableValues));
