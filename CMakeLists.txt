@@ -12,7 +12,7 @@ set(expressionparser_files
 add_executable(logic
         ${expressionparser_files}
         main.cpp
-	LogicGate.cpp
+        LogicGate.cpp
         LogicGate.h
         statement.cpp
         statement.h
