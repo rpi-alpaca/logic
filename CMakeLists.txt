@@ -32,3 +32,17 @@ add_executable(logic-test
         statementevaluator.h
         Tree.cpp
         Tree.h)
+add_executable(logic-wasm
+	${expressionparser_files}
+        LogicGate.cpp
+        LogicGate.h
+        emscripten_wrap.cpp
+        statement.cpp
+        statement.h
+        statementevaluator.cpp
+        statementevaluator.h
+        Tree.cpp
+        Tree.h)
+
+set_target_properties(logic-wasm PROPERTIES LINK_FLAGS "--bind")
+
