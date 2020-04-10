@@ -1,3 +1,5 @@
+name: WebAssembly
+
 on: [push]
 
 jobs:
