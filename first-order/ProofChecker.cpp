@@ -44,6 +44,9 @@ bool ProofChecker::isValid() const{
         FirstOrderTree* child;
         std::list<FirstOrderTree*>::const_iterator itr = childStatements.begin();
         child = *itr;
+
+        string neg1 = child->print();
+
     }
 	
     if(justification=="~E"){

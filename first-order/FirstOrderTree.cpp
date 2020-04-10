@@ -1,6 +1,7 @@
 #include "FirstOrderTree.h"
 #include "expressionparser.h"
 #include <stack>
+
 using namespace std;
 
 FirstOrderTree::FirstOrderTree(){
@@ -51,6 +52,29 @@ void FirstOrderTree::printNode(FirstOrderNode* s) const {
 		printNode(s->right);
 		std::cout << ")";
 	}
+}
+
+//Returns the tree as a string in order
+std::string FirstOrderTree::getString() const {
+	return getStringNode(head);
+}
+
+//Helper function for print
+std::string FirstOrderTree::getStringNode(FirstOrderNode* s) const {
+    string result = ""
+	if (s->negation) 
+		result = result + '~';
+	if (s->opType == 'v') 
+		result = result + s->value;
+	else {
+		result = result +  '(';
+		result = result +  getStringNode(s->left);
+		result = result +  " ";
+		result = result +  s->opType << " ";
+		result = result +  getStringNode(s->right);
+	    result = result +  ")";
+	}
+    return result;
 }
 
 //Print the tree as its structure
