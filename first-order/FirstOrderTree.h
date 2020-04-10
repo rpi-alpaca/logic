@@ -36,6 +36,7 @@ public:
 
     std::string getString() const;
 	std::string getStringNode(FirstOrderNode* s) const;
+	FirstOrderNode* getHeadFirstOrderNode() const;
 
 private:
 	FirstOrderNode* copy_statement(FirstOrderNode* old_node);

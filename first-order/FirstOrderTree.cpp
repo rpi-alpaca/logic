@@ -54,6 +54,13 @@ void FirstOrderTree::printNode(FirstOrderNode* s) const {
 	}
 }
 
+
+//Returns Head Node of Tree For isValid() Determination In ProofChecker:
+FirstOrderNode* FirstOrderTree::getHeadFirstOrderNode() const {
+	return head;
+}
+
+
 //Returns the tree as a string in order
 std::string FirstOrderTree::getString() const {
 	return getStringNode(head);
