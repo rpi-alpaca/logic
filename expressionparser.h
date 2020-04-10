@@ -11,6 +11,8 @@ public:
 	bool isOperator(char token);
 	char getAssociativity(char op);
 	int getPrecedence(char op);
+	bool getGenerality(char op);
+	bool isCorrectSyntax(string input, unsigned int & index);
 	string formatInputValue(string currentInput);
 	string runShuntingYardAlgorithm(string str);
 };

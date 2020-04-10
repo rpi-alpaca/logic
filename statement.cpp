@@ -7,11 +7,11 @@ Statement::Statement() {
 
 Statement::Statement(const std::string& input) {
 	input_statement = input;
-	if (input_statement.find("&&") >= 0) {
+	if (input_statement.find("&&") != std::string::npos) {
 		statement_type = '&';
-	} else if (input_statement.find("||") >= 0) {
+	} else if (input_statement.find("||") != std::string::npos) {
 		statement_type = '|';
-	} else if (input_statement.find("~") >= 0) {
+	} else if (input_statement.find("~") != std::string::npos) {
 		statement_type = '~';
 	} else {
 		statement_type = 'v';

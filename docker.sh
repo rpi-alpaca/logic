@@ -1,2 +1,2 @@
 emconfigure cmake .
-emmake make logic
+emmake make logic-wasm
