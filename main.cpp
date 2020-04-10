@@ -33,6 +33,5 @@ void defaultTest() {
 
 int main(int argc, char* argv[]) {
 	defaultTest();
-	
 	return EXIT_SUCCESS;
 }
