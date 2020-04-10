@@ -1,0 +1,12 @@
+on: [push]
+
+jobs:
+    logic_test_job:
+        runs-on: ubuntu-latest
+        name: Regression testing
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+            - name: Build
+              run: |
+                sh ./run_logic_ci.sh
