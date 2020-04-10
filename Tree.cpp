@@ -1,6 +1,8 @@
 #include "Tree.h"
 #include "expressionparser.h"
 #include <stack>
+#include <algorithm>
+#include <set>
 using namespace std;
 
 //Constructor For Statement Parser w/ Root Head Node:
@@ -11,8 +13,9 @@ StatementParser::StatementParser(){
 
 //Copy-Constructor For Statement Parser:
 StatementParser::StatementParser(const StatementParser& s) {
-	head = new StatementNode;
+	//Copy new data
 	head = copy_statement(s.head);
+	variableNames = s.getVariableNames();
 }
 
 //Constructor To Merge Two StatementParsers:
@@ -23,6 +26,20 @@ StatementParser::StatementParser(const StatementParser& s1, const StatementParse
 	head->value = '&';
 	head->left = copy_statement(s1.head);
 	head->right = copy_statement(s2.head);
+
+	// A set is used to account for a variable that appears in both statments
+	set<string> variableNamesTemp;
+	for(string varName : s1.getVariableNames()) {
+		variableNamesTemp.insert(varName);
+	}
+	for(string varName : s2.getVariableNames()) {
+		variableNamesTemp.insert(varName);
+	}
+
+	for(string varName : variableNamesTemp) {
+		variableNames.emplace_back(varName);
+	}
+
 }
 
 //Constructor Based On String Input:
@@ -30,6 +47,22 @@ StatementParser::StatementParser(const StatementParser& s1, const StatementParse
 StatementParser::StatementParser(const std::string& statement){
 	head = new StatementNode();
 	parseStatement(head, statement);
+}
+
+StatementParser::~StatementParser() {
+	destroy_statement(head);
+}
+
+StatementParser& StatementParser::operator=(const StatementParser& s) {
+	//Delete old data
+	destroy_statement(head);
+	variableNames.clear();
+
+	//Copy new data
+	head = copy_statement(s.head);
+	variableNames = s.getVariableNames();
+
+	return *this;
 }
 
 //Changes The Statement That An Underlying Expression Represents.
@@ -99,9 +132,21 @@ StatementNode* StatementParser::copy_statement(StatementNode* old_node) {
 	StatementNode* new_node = new StatementNode;
 	new_node->value = old_node->value;
 	new_node->opType = old_node->opType;
+	new_node->connector = old_node->connector;
+	new_node->negation = old_node->negation;
 	new_node->left = copy_statement(old_node->left);
 	new_node->right = copy_statement(old_node->right);
 	return new_node;
+}
+
+//Destroy Helper Function For Destroying Nodes
+void StatementParser::destroy_statement(StatementNode*& old_node) {
+	if(old_node) {
+		destroy_statement(old_node->left);
+		destroy_statement(old_node->right);
+		delete old_node;
+		old_node = nullptr;
+	}
 }
 
 //Recursively Parses Any String Input Statment
@@ -177,6 +222,9 @@ void StatementParser::parseStatement(StatementNode*& n, const std::string& state
 			//Note: v' May Indicate Leaf Node?
 			StatementNode* currentNode = new StatementNode();
 			currentNode->value = currentOutput[k];
+			if(find(variableNames.begin(), variableNames.end(), currentNode->value) == variableNames.end()) {
+				variableNames.push_back(currentNode->value);
+			}
 			currentNode->opType = 'v';
 			//Set Negation = False As Sanity Check Once Again.
 			currentNode->negation = false;
@@ -188,6 +236,18 @@ void StatementParser::parseStatement(StatementNode*& n, const std::string& state
 	if(convertToTree.size() != 1){
 		cout << "Error In Construction. Must Review Input/Output." << endl;
 	}
+	//Deletes memory
+	delete n;
+	delete currentExpressionParser;
 	//Set New Head Value = Top/Root of Stack.
 	n = convertToTree.top();
+	
+}
+
+const vector<string>& StatementParser::getVariableNames() const {
+	return variableNames;
+}
+
+bool sortByVariableName(const pair<string, bool>& a, const pair<string, bool>& b) {
+	return a.first < b.first;
 }
