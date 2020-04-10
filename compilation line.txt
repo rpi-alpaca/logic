@@ -1,0 +1,1 @@
+g++ Tree.cpp statementevaluator.cpp LogicGate.cpp expressionparser.cpp main.cpp statement.cpp -o a.out

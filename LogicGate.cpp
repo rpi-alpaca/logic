@@ -54,6 +54,6 @@ bool LogicGate::containsState(char checkState) {
 	return (got == initStatements.end());
 }
 
-bool LogicGate::addOperator(char stateOne, char stateTwo, char opAdd) {
+bool LogicGate::addOperator(__attribute__((unused)) char stateOne, __attribute__((unused)) char stateTwo, __attribute__((unused)) char opAdd) {
 	return false;
 }

@@ -1,0 +1,11 @@
+<!doctype html>
+<html>
+  <script>
+    var Module = {
+      onRuntimeInitialized: function() {
+        console.log('test result ' + Module.Logic("(A) & ((B) | (C))"));
+      }
+    };
+  </script>
+  <script src="logic-wasm.js"></script>
+</html>
