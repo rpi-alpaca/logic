@@ -20,7 +20,7 @@ int main(int argc, char* argv[]){
     expression.addChild(new FirstOrderTree("A"));
     std::cout << "Result of OR Intro (A) => A | B: " + expression.check();
 
-    // OR Elim expression NOT Intro cannot be tested yet, as we have not figured out how to represent
+    // OR Elim and NOT Intro cannot be tested yet, as we have not figured out how to represent
     // subproofs
 
     // Test NOT Elim

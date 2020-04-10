@@ -39,55 +39,75 @@ void ProofChecker::addChild(const FirstOrderTree& child){
 bool ProofChecker::isValid() const{
 	// TODO
 
-	// NOT INTRO
-	FirstOrderTree* child;
-	std::list<FirstOrderTree*>::const_iterator itr = childStatements.begin();
-	child = *itr;
-
-	// NOT ELIM
-
-	// AND INTRO
-	FirstOrderTree* child1;
-	FirstOrderTree* child2;
-	std::list<FirstOrderTree*>::const_iterator itr = childStatements.begin();
-	child1 = *itr;
-	itr++;
-	child2 = *itr;
-
-	// AND ELIM
-	FirstOrderTree* child;
-	std::list<FirstOrderTree*>::const_iterator itr = childStatements.begin();
-	child = *itr;
-
-	// OR INTRO
-	FirstOrderTree* child;
-	std::list<FirstOrderTree*>::const_iterator itr = childStatements.begin();
-	child = *itr;
-
-	// OR ELIM
+    if(justification=="~I"){
+        // NOT INTRO
+        FirstOrderTree* child;
+        std::list<FirstOrderTree*>::const_iterator itr = childStatements.begin();
+        child = *itr;
+    }
 	
+    if(justification=="~E"){
+	// NOT ELIM
+    }
 
-	// -> INTRO
+    if(justification=="&I"){
+        // AND INTRO
+        FirstOrderTree* child1;
+        FirstOrderTree* child2;
+        std::list<FirstOrderTree*>::const_iterator itr = childStatements.begin();
+        child1 = *itr;
+        itr++;
+        child2 = *itr;
+    }
 
-	// -> ELIM
-	FirstOrderTree* child;
-	std::list<FirstOrderTree*>::const_iterator itr = childStatements.begin();
-	child = *itr;
+    if(justification=="&E"){
+        // AND ELIM
+        FirstOrderTree* child;
+        std::list<FirstOrderTree*>::const_iterator itr = childStatements.begin();
+        child = *itr;
+    }
 
-	// <-> INTRO
-	FirstOrderTree* child1;
-	FirstOrderTree* child2;
-	std::list<FirstOrderTree*>::const_iterator itr = childStatements.begin();
-	child1 = *itr;
-	itr++;
-	child2 = *itr;
+    if(justification=="|I"){
+        // OR INTRO
+        FirstOrderTree* child;
+        std::list<FirstOrderTree*>::const_iterator itr = childStatements.begin();
+        child = *itr;
+    }
 
-	// <-> ELIM
-	FirstOrderTree* child1;
-	FirstOrderTree* child2;
-	std::list<FirstOrderTree*>::const_iterator itr = childStatements.begin();
-	child1 = *itr;
-	itr++;
-	child2 = *itr;
+    if(justification=="|E"){
+	    // OR ELIM
+    }
+	
+    if(justification==">I"){
+	    // -> INTRO
+    }
+
+    if(justification==">E"){
+        // -> ELIM
+        FirstOrderTree* child;
+        std::list<FirstOrderTree*>::const_iterator itr = childStatements.begin();
+        child = *itr;
+    }
+
+    if(justification=="=I"){
+        // <-> INTRO
+        FirstOrderTree* child1;
+        FirstOrderTree* child2;
+        std::list<FirstOrderTree*>::const_iterator itr = childStatements.begin();
+        child1 = *itr;
+        itr++;
+        child2 = *itr;
+    }
+
+    if(justification=="=E"){
+        // <-> ELIM
+        FirstOrderTree* child1;
+        FirstOrderTree* child2;
+        std::list<FirstOrderTree*>::const_iterator itr = childStatements.begin();
+        child1 = *itr;
+        itr++;
+        child2 = *itr;
+    }
 	return false; 
+
 }
