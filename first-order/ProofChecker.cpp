@@ -41,16 +41,47 @@ bool ProofChecker::isValid() const{
 
     if(justification=="~I"){
         // NOT INTRO
-        FirstOrderTree* child;
+
+        // If you have A, and from A you get B, and you have ~B, you can get ~A
+        FirstOrderTree* child1;
+        FirstOrderTree* child2;
+        FirstOrderTree* child3;
         std::list<FirstOrderTree*>::const_iterator itr = childStatements.begin();
-        child = *itr;
+        child1 = *itr;
+        itr++;
+        child2 = *itr;
+        itr++;
+        child3 = *itr;
 
-        string neg1 = child->print();
+        // child 3 should be the exact opposite of either child 1 or child 2
 
+        // case where child 1 is opposite of child 3:
+        if(child1->getHeadFirstOrderNode.value.equals(child3->getHeadFirstOrderNode.value) && child1->getHeadFirstOrderNode.negation != child3->getHeadFirstOrderNode.negation){
+            // one and three are opposites; mainstatement should be equal to child 2 with an added negation
+
+            if(child2->getHeadFirstOrderNode.value.equals(mainStatement->getHeadFirstOrderNode.value) && child2->getHeadFirstOrderNode.negation && !mainStatement->getHeadFirstOrderNode.negation){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        else{ // case where child 2 is opposite of child 3:
+            // two and three are opposites; mainstatement should be equal to child 1 with an added negation
+            if(child1->getHeadFirstOrderNode.value.equals(mainStatement->getHeadFirstOrderNode.value) && child1->getHeadFirstOrderNode.negation && !mainStatement->getHeadFirstOrderNode.negation){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        return false;
     }
 	
     if(justification=="~E"){
 	// NOT ELIM
+
+    // If you have ~A, and from ~A you get B, and you have ~B, you can get A
     }
 
     if(justification=="&I"){
