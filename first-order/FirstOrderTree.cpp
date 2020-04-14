@@ -73,16 +73,18 @@ std::string FirstOrderTree::getString() const {
 
 //Helper function for print
 std::string FirstOrderTree::getStringNode(FirstOrderNode* s) const {
-    string result = ""
-	if (s->negation) 
+    string result = "";
+	if(s->negation){ 
 		result = result + '~';
-	if (s->opType == 'v') 
+	}
+	if(s->opType == 'v'){
 		result = result + s->value;
+	}
 	else {
 		result = result +  '(';
 		result = result +  getStringNode(s->left);
 		result = result +  " ";
-		result = result +  s->opType << " ";
+		result = result +  s->opType + " ";
 		result = result +  getStringNode(s->right);
 	    result = result +  ")";
 	}

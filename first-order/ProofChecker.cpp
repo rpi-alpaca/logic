@@ -6,7 +6,7 @@ using namespace std;
 // Default constructor
 ProofChecker::ProofChecker() {
 	mainStatement = new FirstOrderTree();
-	justification = "Introduction"
+	justification = "Introduction";
 }
 
 // String constructor
@@ -56,10 +56,10 @@ bool ProofChecker::isValid() const{
         // child 3 should be the exact opposite of either child 1 or child 2
 
         // case where child 1 is opposite of child 3:
-        if(child1->getHeadFirstOrderNode.value.equals(child3->getHeadFirstOrderNode.value) && child1->getHeadFirstOrderNode.negation != child3->getHeadFirstOrderNode.negation){
+        if(child1->getHeadFirstOrderNode()->value.compare(child3->getHeadFirstOrderNode()->value) && child1->getHeadFirstOrderNode()->negation != child3->getHeadFirstOrderNode()->negation){
             // one and three are opposites; mainstatement should be equal to child 2 with an added negation
 
-            if(child2->getHeadFirstOrderNode.value.equals(mainStatement->getHeadFirstOrderNode.value) && child2->getHeadFirstOrderNode.negation && !mainStatement->getHeadFirstOrderNode.negation){
+            if(child2->getHeadFirstOrderNode()->value.compare(mainStatement->getHeadFirstOrderNode()->value) && child2->getHeadFirstOrderNode()->negation && !mainStatement->getHeadFirstOrderNode()->negation){
                 return true;
             }
             else{
@@ -68,7 +68,7 @@ bool ProofChecker::isValid() const{
         }
         else{ // case where child 2 is opposite of child 3:
             // two and three are opposites; mainstatement should be equal to child 1 with an added negation
-            if(child1->getHeadFirstOrderNode.value.equals(mainStatement->getHeadFirstOrderNode.value) && child1->getHeadFirstOrderNode.negation && !mainStatement->getHeadFirstOrderNode.negation){
+            if(child1->getHeadFirstOrderNode()->value.compare(mainStatement->getHeadFirstOrderNode()->value) && child1->getHeadFirstOrderNode()->negation && !mainStatement->getHeadFirstOrderNode()->negation){
                 return true;
             }
             else{
@@ -94,17 +94,18 @@ bool ProofChecker::isValid() const{
         itr++;
         child2 = *itr;
         //Get Head of Main Statement:
-        FirstOrderNode* root = mainStatement.getHeadNode();
-        if(root->left != child1.getHeadNode()){
-            if(root->left != child2.getHeadNode()){
+        FirstOrderNode* root = mainStatement->getHeadFirstOrderNode();
+        if(root->left != child1->getHeadFirstOrderNode()){
+            //Case 1: 
+            if(root->left != child2->getHeadFirstOrderNode()){
                 return false;
             }
             else{
-                return root->right == child1.getHeadNode(); 
+                return root->right == child1->getHeadFirstOrderNode(); 
             }
         }
         else{
-            return root->right == child2.getHeadNode();
+            return root->right == child2->getHeadFirstOrderNode();
         }
 
     }

@@ -21,6 +21,6 @@ private:
 	FirstOrderTree* mainStatement;
 	std::list<FirstOrderTree*> childStatements;
 	std::string justification;
-}
+};
 
 #endif

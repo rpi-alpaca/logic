@@ -1,10 +1,9 @@
-#ifndef _TREE_H_
-#define _TREE_H_
+#ifndef _FIRST_ORDER_TREE_H_
+#define _FIRST_ORDER_TREE_H_
 
 #include <iostream>
 #include <string>
-
-
+using namespace std;
 
 class FirstOrderNode {
 public:
