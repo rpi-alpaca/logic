@@ -6,7 +6,7 @@ using namespace std;
 // Default constructor
 ProofChecker::ProofChecker() {
 	mainStatement = new FirstOrderTree();
-	justification = "Introduction"
+	justification = "Introduction";
 }
 
 // String constructor
@@ -44,9 +44,6 @@ bool ProofChecker::isValid() const{
         FirstOrderTree* child;
         std::list<FirstOrderTree*>::const_iterator itr = childStatements.begin();
         child = *itr;
-
-        string neg1 = child->print();
-
     }
 	
     if(justification=="~E"){
@@ -63,17 +60,18 @@ bool ProofChecker::isValid() const{
         itr++;
         child2 = *itr;
         //Get Head of Main Statement:
-        FirstOrderNode* root = mainStatement.getHeadNode();
-        if(root->left != child1.getHeadNode()){
-            if(root->left != child2.getHeadNode()){
+        FirstOrderNode* root = mainStatement->getHeadFirstOrderNode();
+        if(root->left != child1->getHeadFirstOrderNode()){
+            //Case 1: 
+            if(root->left != child2->getHeadFirstOrderNode()){
                 return false;
             }
             else{
-                return root->right == child1.getHeadNode(); 
+                return root->right == child1->getHeadFirstOrderNode(); 
             }
         }
         else{
-            return root->right == child2.getHeadNode();
+            return root->right == child2->getHeadFirstOrderNode();
         }
 
     }
