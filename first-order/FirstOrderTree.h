@@ -26,6 +26,7 @@ public:
 	//Combine two statements with a connector
 	FirstOrderTree(const FirstOrderTree& s1, const FirstOrderTree& s2);
 	FirstOrderTree(const std::string& statement);
+	FirstOrderTree(FirstOrderNode* s);
 
 	void changeHeadValue(const std::string& statement);
 	
