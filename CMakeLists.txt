@@ -21,6 +21,15 @@ add_executable(logic
         Tree.cpp
         Tree.h)
 
+add_executable(first-order
+        first-order/FirstOrderTree.cpp
+        first-order/FirstOrderTree.h
+        first-order/ProofChecker.cpp
+        first-order/ProofChecker.h
+        first-order/ProofCheckerTest.cpp
+        first-order/expressionparser.cpp
+        first-order/expressionparser.h)
+
 add_executable(logic-test
         ${expressionparser_files}
         LogicTest.cpp
