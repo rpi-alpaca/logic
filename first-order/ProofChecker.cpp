@@ -5,13 +5,13 @@ using namespace std;
 
 // Default constructor
 ProofChecker::ProofChecker() {
-	mainStatement = new FirstOrderTree();
+	mainStatement = FirstOrderTree();
 	justification = "Introduction";
 }
 
 // String constructor
 ProofChecker::ProofChecker(const string& mainStatementString) {
-	mainStatement = new FirstOrderTree(mainStatementString);
+	mainStatement = FirstOrderTree(mainStatementString);
 	justification = "Introduction";
 } 
 
@@ -26,14 +26,12 @@ void ProofChecker::changeMainStatement(const string& mainStatementString) {
 	
 	// If we delete a tree in order to make a new one,
 	// how problematic is that for parent statements?
-	
-	delete mainStatement;
-	mainStatement = new FirstOrderTree(mainStatementString);
+	mainStatement = FirstOrderTree(mainStatementString);
 	bool validity = isValid();
 }
 
 void ProofChecker::addChild(const FirstOrderTree& child){
-	childStatements.push_back(new FirstOrderTree(child));
+	childStatements.push_back(FirstOrderTree(child));
 }
 
 bool ProofChecker::isValid() const{
@@ -43,23 +41,18 @@ bool ProofChecker::isValid() const{
         // NOT INTRO
 
         // If you have A, and from A you get B, and you have ~B, you can get ~A
-        FirstOrderTree* child1;
-        FirstOrderTree* child2;
-        FirstOrderTree* child3;
-        std::list<FirstOrderTree*>::const_iterator itr = childStatements.begin();
-        child1 = *itr;
-        itr++;
-        child2 = *itr;
-        itr++;
-        child3 = *itr;
+        std::list<FirstOrderTree>::const_iterator itr = childStatements.begin();
+        const FirstOrderTree& child1 = *(itr++);
+        const FirstOrderTree& child2 = *(itr++);
+        const FirstOrderTree& child3 = *(itr++);
 
         // child 3 should be the exact opposite of either child 1 or child 2
 
         // case where child 1 is opposite of child 3:
-        if(child1->getHeadFirstOrderNode()->value.compare(child3->getHeadFirstOrderNode()->value) && child1->getHeadFirstOrderNode()->negation != child3->getHeadFirstOrderNode()->negation){
+        if(child1.getHeadFirstOrderNode()->value.compare(child3.getHeadFirstOrderNode()->value) && child1.getHeadFirstOrderNode()->negation != child3.getHeadFirstOrderNode()->negation){
             // one and three are opposites; mainstatement should be equal to child 2 with an added negation
 
-            if(child2->getHeadFirstOrderNode()->value.compare(mainStatement->getHeadFirstOrderNode()->value) && child2->getHeadFirstOrderNode()->negation && !mainStatement->getHeadFirstOrderNode()->negation){
+            if(child2.getHeadFirstOrderNode()->value.compare(mainStatement.getHeadFirstOrderNode()->value) && child2.getHeadFirstOrderNode()->negation && !mainStatement.getHeadFirstOrderNode()->negation){
                 return true;
             }
             else{
@@ -68,7 +61,7 @@ bool ProofChecker::isValid() const{
         }
         else{ // case where child 2 is opposite of child 3:
             // two and three are opposites; mainstatement should be equal to child 1 with an added negation
-            if(child1->getHeadFirstOrderNode()->value.compare(mainStatement->getHeadFirstOrderNode()->value) && child1->getHeadFirstOrderNode()->negation && !mainStatement->getHeadFirstOrderNode()->negation){
+            if(child1.getHeadFirstOrderNode()->value.compare(mainStatement.getHeadFirstOrderNode()->value) && child1.getHeadFirstOrderNode()->negation && !mainStatement.getHeadFirstOrderNode()->negation){
                 return true;
             }
             else{
@@ -86,41 +79,41 @@ bool ProofChecker::isValid() const{
 
     if(justification=="&I"){
         //AND Introduction:
-        FirstOrderTree* child1;
-        FirstOrderTree* child2;
+        FirstOrderTree child1;
+        FirstOrderTree child2;
         //Start At Begininng of Children Statements:
-        std::list<FirstOrderTree*>::const_iterator itr = childStatements.begin();
+        std::list<FirstOrderTree>::const_iterator itr = childStatements.begin();
         child1 = *itr;
         itr++;
         child2 = *itr;
         //Get Head of Main Statement:
-        FirstOrderNode* root = mainStatement->getHeadFirstOrderNode();
-        if(root->left != child1->getHeadFirstOrderNode()){
+        FirstOrderNode* root = mainStatement.getHeadFirstOrderNode();
+        if(root->left != child1.getHeadFirstOrderNode()){
             //Case 1: 
-            if(root->left != child2->getHeadFirstOrderNode()){
+            if(root->left != child2.getHeadFirstOrderNode()){
                 return false;
             }
             else{
-                return root->right == child1->getHeadFirstOrderNode(); 
+                return root->right == child1.getHeadFirstOrderNode(); 
             }
         }
         else{
-            return root->right == child2->getHeadFirstOrderNode();
+            return root->right == child2.getHeadFirstOrderNode();
         }
 
     }
 
     if(justification=="&E"){
         // AND ELIM
-        FirstOrderTree* child;
-        std::list<FirstOrderTree*>::const_iterator itr = childStatements.begin();
+        FirstOrderTree child;
+        std::list<FirstOrderTree>::const_iterator itr = childStatements.begin();
         child = *itr;
     }
 
     if(justification=="|I"){
         // OR INTRO
-        FirstOrderTree* child;
-        std::list<FirstOrderTree*>::const_iterator itr = childStatements.begin();
+        FirstOrderTree child;
+        std::list<FirstOrderTree>::const_iterator itr = childStatements.begin();
         child = *itr;
     }
 
@@ -134,16 +127,16 @@ bool ProofChecker::isValid() const{
 
     if(justification==">E"){
         // -> ELIM
-        FirstOrderTree* child;
-        std::list<FirstOrderTree*>::const_iterator itr = childStatements.begin();
+        FirstOrderTree child;
+        std::list<FirstOrderTree>::const_iterator itr = childStatements.begin();
         child = *itr;
     }
 
     if(justification=="=I"){
         // <-> INTRO
-        FirstOrderTree* child1;
-        FirstOrderTree* child2;
-        std::list<FirstOrderTree*>::const_iterator itr = childStatements.begin();
+        FirstOrderTree child1;
+        FirstOrderTree child2;
+        std::list<FirstOrderTree>::const_iterator itr = childStatements.begin();
         child1 = *itr;
         itr++;
         child2 = *itr;
@@ -151,9 +144,9 @@ bool ProofChecker::isValid() const{
 
     if(justification=="=E"){
         // <-> ELIM
-        FirstOrderTree* child1;
-        FirstOrderTree* child2;
-        std::list<FirstOrderTree*>::const_iterator itr = childStatements.begin();
+        FirstOrderTree child1;
+        FirstOrderTree child2;
+        std::list<FirstOrderTree>::const_iterator itr = childStatements.begin();
         child1 = *itr;
         itr++;
         child2 = *itr;

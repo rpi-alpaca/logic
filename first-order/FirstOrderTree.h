@@ -38,11 +38,16 @@ public:
 	std::string getStringNode(FirstOrderNode* s) const;
 	FirstOrderNode* getHeadFirstOrderNode() const;
 
+	FirstOrderTree& operator=(const FirstOrderTree&);
+
+	~FirstOrderTree();
 private:
 	FirstOrderNode* copy_statement(FirstOrderNode* old_node);
 	void parseStatement(FirstOrderNode*& n, const std::string& statement);
-	FirstOrderNode* head;
+	FirstOrderNode* head = nullptr;
 	friend class StatementEvaluator;
+
+	void delete_helper(FirstOrderNode*);
 };
 
 #endif
