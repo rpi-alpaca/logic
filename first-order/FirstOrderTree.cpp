@@ -222,8 +222,6 @@ FirstOrderTree::~FirstOrderTree() {
 FirstOrderTree& FirstOrderTree::operator=(const FirstOrderTree& tree) {
 	if (&tree == this) return *this;
 
-	std::cout << "operator=" << std::endl;
-
 	this->delete_helper(this->head);
 	head = copy_statement(tree.head);
 
