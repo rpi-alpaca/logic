@@ -135,7 +135,7 @@ bool ProofChecker::isValid() const{
         // get both sides of the conditional
         // If the head operator is not a conditional, return false
         FirstOrderNode* head = child2.getHeadFirstOrderNode();
-<<<<<<< HEAD
+
         if(!(head->opType == '>')) {
             return false;
         }
