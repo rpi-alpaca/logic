@@ -17,7 +17,6 @@ ProofChecker::ProofChecker(const string& mainStatementString) {
 
 void ProofChecker::changeJustification(const string& just) {
 	justification = just;
-	bool validity = isValid();
 } 
 
 void ProofChecker::changeMainStatement(const string& mainStatementString) {
@@ -87,6 +86,7 @@ bool ProofChecker::isValid() const{
         itr++;
         child2 = *itr;
         //Get Head of Main Statement:
+        cout << childStatements.size() << endl;
         FirstOrderNode* root = mainStatement.getHeadFirstOrderNode();
         if(root->left != child1.getHeadFirstOrderNode()){
             //Case 1: 
