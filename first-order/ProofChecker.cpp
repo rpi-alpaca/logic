@@ -128,26 +128,24 @@ bool ProofChecker::isValid() const{
     if(justification==">E"){
         // -> ELIM
         // assign child1 and child2 to the two statements starting the inference rule
-        FirstOrderTree* child1;
-        FirstOrderTree* child2;
-        std::list<FirstOrderTree*>::const_iterator itr = childStatements.begin();
-        child1 = *itr;
-        itr++;
-        child2 = *itr;
+        std::list<FirstOrderTree>::const_iterator itr = childStatements.begin();
+        const FirstOrderTree& child1 = *(itr++);
+        const FirstOrderTree& child2 = *(itr++);
         // assume the child2 is the conditional being eliminted
         // get both sides of the conditional
         // If the head operator is not a conditional, return false
-        FirstOrderNode* head = child2.getHeadFirstOrderNode()
-        if(!(head->opType() == '>')) {
+        FirstOrderNode* head = child2.getHeadFirstOrderNode();
+
+        if (head->opType != '>') {
             return false;
         }
         // otherwise, get both sides of the operation
-        FirstOrderTree* first;
-        FirstOrderTree* second;
-        first = new FirstOrderTree(*(head->left));
-        second = new FirstOrderTree(*(head->right));
-        first->print();
-        second->print();
+        FirstOrderTree first;
+        FirstOrderTree second;
+        first = FirstOrderTree((head->left));
+        second =FirstOrderTree((head->right));
+        first.print();
+        second.print();
 
         // If the child1 is not the left side of the operation and
         // the main statement is not the right side of the operation, return false
