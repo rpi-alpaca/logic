@@ -30,7 +30,7 @@ FirstOrderTree::FirstOrderTree(const std::string& statement){
 
 // constructs a FirstOrderTree given an firstOrderNode with that node as the head
 FirstOrderTree::FirstOrderTree(FirstOrderNode* s){
-	head = &s;
+	head = s;
 }
 
 void FirstOrderTree::changeHeadValue(const std::string& statement) {

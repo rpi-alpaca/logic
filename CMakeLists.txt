@@ -21,7 +21,7 @@ add_executable(logic
         Tree.cpp
         Tree.h)
 
-add_executable(first-order
+add_executable(first_order
         first-order/FirstOrderTree.cpp
         first-order/FirstOrderTree.h
         first-order/ProofChecker.cpp
