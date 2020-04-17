@@ -117,10 +117,13 @@ bool ProofChecker::isValid() const{
             return false;
         }
         // otherwise, get both sides of the operation
-        FirstOrderNode* first;
-        FirstOrderNode* second;
-        first = *(head->left)
-        second = *(head->right)
+        FirstOrderTree* first;
+        FirstOrderTree* second;
+        first = new FirstOrderTree(*(head->left));
+        second = new FirstOrderTree(*(head->right));
+        first->print();
+        second->print();
+
         // If the child1 is not the left side of the operation and
         // the main statement is not the right side of the operation, return false
         //if(first)
