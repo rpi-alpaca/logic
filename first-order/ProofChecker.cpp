@@ -146,8 +146,11 @@ bool ProofChecker::isValid() const{
         FirstOrderTree* second;
         first = new FirstOrderTree(head->left);
         second = new FirstOrderTree(head->right);
-        //first->print();
-        //second->print();
+
+        // return true if child1 matches the left side and
+        // the main statement matches the right side
+        if(first->getString() == child1.getString() && second->getString() == mainStatement.getString())
+            return true;
 
         // If the child1 is not the left side of the operation and
         // the main statement is not the right side of the operation, return false
