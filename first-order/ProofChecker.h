@@ -17,6 +17,7 @@ public:
 	void addChild(const FirstOrderTree& child);
 
 	bool isValid() const;
+	
 private:
 	FirstOrderTree* mainStatement;
 	std::list<FirstOrderTree*> childStatements;
