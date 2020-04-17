@@ -17,10 +17,11 @@ public:
 	void addChild(const FirstOrderTree& child);
 
 	bool isValid() const;
+	
 private:
-	FirstOrderTree* mainStatement;
-	std::list<FirstOrderTree*> childStatements;
+	FirstOrderTree mainStatement;
+	std::list<FirstOrderTree> childStatements;
 	std::string justification;
-}
+};
 
 #endif

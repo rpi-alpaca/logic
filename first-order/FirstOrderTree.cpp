@@ -10,7 +10,6 @@ FirstOrderTree::FirstOrderTree(){
 }
 
 FirstOrderTree::FirstOrderTree(const FirstOrderTree& s) {
-	head = new FirstOrderNode;
 	head = copy_statement(s.head);
 }
 
@@ -22,10 +21,13 @@ FirstOrderTree::FirstOrderTree(const FirstOrderTree& s1, const FirstOrderTree& s
 }
 
 FirstOrderTree::FirstOrderTree(const std::string& statement){
-	//this->head = nullptr;
 	//split it up
-	head = new FirstOrderNode();
 	parseStatement(head, statement);
+}
+
+// constructs a FirstOrderTree given an firstOrderNode with that node as the head
+FirstOrderTree::FirstOrderTree(FirstOrderNode* s){
+	head = s;
 }
 
 void FirstOrderTree::changeHeadValue(const std::string& statement) {
@@ -68,16 +70,18 @@ std::string FirstOrderTree::getString() const {
 
 //Helper function for print
 std::string FirstOrderTree::getStringNode(FirstOrderNode* s) const {
-    string result = ""
-	if (s->negation) 
+    string result = "";
+	if(s->negation){ 
 		result = result + '~';
-	if (s->opType == 'v') 
+	}
+	if(s->opType == 'v'){
 		result = result + s->value;
+	}
 	else {
 		result = result +  '(';
 		result = result +  getStringNode(s->left);
 		result = result +  " ";
-		result = result +  s->opType << " ";
+		result = result +  s->opType + " ";
 		result = result +  getStringNode(s->right);
 	    result = result +  ")";
 	}
@@ -121,8 +125,8 @@ void FirstOrderTree::parseStatement(FirstOrderNode*& n, const std::string& state
 	//Make A Copy Of Input Statement:
 	string currentInput = string(statement);
 	//Run Shunting-Yard Algorithm To Grab Output Reverser Polish Notation of Statement.
-	ExpressionParser* currentExpressionParser = new ExpressionParser();
-	string currentOutput = currentExpressionParser->runShuntingYardAlgorithm(currentInput);
+	ExpressionParser currentExpressionParser;
+	string currentOutput = currentExpressionParser.runShuntingYardAlgorithm(currentInput);
 	stack<FirstOrderNode*> convertToTree;
 	cout << "Output of Shunting-Yard Algorithm (Reverse Polish Notation) = " << currentOutput << endl;
 	//Case = Invalid Expression Communicated By Expression Parser.
@@ -135,7 +139,7 @@ void FirstOrderTree::parseStatement(FirstOrderNode*& n, const std::string& state
 	for(unsigned int k=0; k<currentOutput.size(); k++){
 		//Case 1: Operator != '~'
 		//Create New Node w/ Appropriate Previous Children.
-		if(currentExpressionParser->isOperator(currentOutput[k]) && currentOutput[k] != negValue){
+		if(currentExpressionParser.isOperator(currentOutput[k]) && currentOutput[k] != negValue){
 			//Compute First Previous Stack Value.
 			//= Most Recent Stack Value.
 			FirstOrderNode* prevOne = NULL;
@@ -167,7 +171,7 @@ void FirstOrderTree::parseStatement(FirstOrderNode*& n, const std::string& state
 		//Case 2: Operator == '~'
 		//Do Not Create New Node.
 		//Rather Set Flag of Node To Be Negation = True;
-		else if(currentExpressionParser->isOperator(currentOutput[k]) && currentOutput[k] == negValue){
+		else if(currentExpressionParser.isOperator(currentOutput[k]) && currentOutput[k] == negValue){
 			FirstOrderNode* prevOne = NULL;
 			if(!convertToTree.empty()){
 				prevOne = convertToTree.top();
@@ -201,6 +205,28 @@ void FirstOrderTree::parseStatement(FirstOrderNode*& n, const std::string& state
 	n = convertToTree.top();
 }
 
+void FirstOrderTree::delete_helper(FirstOrderNode* s) {
+	if (!s)
+		return;
+	this->delete_helper(s->right);
+	this->delete_helper(s->left);
+
+	delete s;
+}
+
+FirstOrderTree::~FirstOrderTree() {
+	this->delete_helper(this->head);
+	this->head = nullptr;
+}
+
+FirstOrderTree& FirstOrderTree::operator=(const FirstOrderTree& tree) {
+	if (&tree == this) return *this;
+
+	this->delete_helper(this->head);
+	head = copy_statement(tree.head);
+
+	return *this;
+}
 // std::string conditional(std::string A, std::string B){
 // 	return "(" + B + ") | (~(" + A + "))";
 // }
