@@ -120,6 +120,8 @@ FirstOrderNode* FirstOrderTree::copy_statement(FirstOrderNode* old_node) {
 	FirstOrderNode* new_node = new FirstOrderNode;
 	new_node->value = old_node->value;
 	new_node->opType = old_node->opType;
+	new_node->negation = old_node->negation;
+	new_node->connector = old_node->connector;
 	new_node->left = copy_statement(old_node->left);
 	new_node->right = copy_statement(old_node->right);
 	return new_node;
@@ -221,6 +223,7 @@ void FirstOrderTree::delete_helper(FirstOrderNode* s) {
 	this->delete_helper(s->left);
 
 	delete s;
+	s = NULL;
 }
 
 // Destructor for garbage collection of pointers
@@ -234,7 +237,6 @@ FirstOrderTree& FirstOrderTree::operator=(const FirstOrderTree& tree) {
 
 	this->delete_helper(this->head);
 	head = copy_statement(tree.head);
-
 	return *this;
 }
 // std::string conditional(std::string A, std::string B){

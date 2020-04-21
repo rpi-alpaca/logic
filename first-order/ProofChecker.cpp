@@ -66,7 +66,7 @@ bool ProofChecker::isValid() const{
 
         // case where child 1 is opposite of child 3:
         if(child1.getHeadFirstOrderNode()->value.compare(child3.getHeadFirstOrderNode()->value) && child1.getHeadFirstOrderNode()->negation != child3.getHeadFirstOrderNode()->negation){
-            std::cout << "Child 1 opposite of 3" << std::endl;
+            cout << "Child 1 opposite of 3" << " ";
             // TODO: Need to figure out how to verify that child 2 is the parent of child 3... 
             
             // one and three are opposites; mainstatement should be equal to child 2 with an added negation
@@ -79,7 +79,7 @@ bool ProofChecker::isValid() const{
         }
         else{ // case where child 2 is opposite of child 3:
             // TODO: Need to figure out how to verify that child 1 is the parent of child 3... 
-            std::cout << "Child 2 opposite of 3" << std::endl;
+            cout << "Child 2 opposite of 3" << " ";
             // two and three are opposites; mainstatement should be equal to child 1 with an added negation
             if(child1.getHeadFirstOrderNode()->value.compare(mainStatement.getHeadFirstOrderNode()->value) && !child1.getHeadFirstOrderNode()->negation && mainStatement.getHeadFirstOrderNode()->negation){
                 return true;
@@ -144,8 +144,6 @@ bool ProofChecker::isValid() const{
         bool oneNegation = oneNode->negation;
         string twoValue = twoNode->value;
         bool twoNegation = twoNode->negation;
-        cout << root->left->negation << " "; 
-        cout << root->right->negation << " ";
         //Check Root Left's Child Value == Child 1 Value
         //Case 1: Root Left Value != Child 1 Value
         if(root->left->value == oneValue && root->left->negation == oneNegation){
