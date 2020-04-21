@@ -131,19 +131,18 @@ bool ProofChecker::isValid() const{
         itr++;
         child2 = *itr;
         //Get Head of Main Statement:
-        cout << childStatements.size() << endl;
         FirstOrderNode* root = mainStatement.getHeadFirstOrderNode();
-        if(root->left != child1.getHeadFirstOrderNode()){
+        if(root->left->value != child1.getHeadFirstOrderNode()->value){
             //Case 1: 
-            if(root->left != child2.getHeadFirstOrderNode()){
+            if(root->left->value != child2.getHeadFirstOrderNode()->value){
                 return false;
             }
             else{
-                return root->right == child1.getHeadFirstOrderNode(); 
+                return root->right->value == child1.getHeadFirstOrderNode()->value; 
             }
         }
         else{
-            return root->right == child2.getHeadFirstOrderNode();
+            return root->right->value == child2.getHeadFirstOrderNode()->value;
         }
 
     }
