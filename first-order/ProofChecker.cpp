@@ -66,7 +66,7 @@ bool ProofChecker::isValid() const{
 
         // case where child 1 is opposite of child 3:
         if(child1.getHeadFirstOrderNode()->value.compare(child3.getHeadFirstOrderNode()->value) && child1.getHeadFirstOrderNode()->negation != child3.getHeadFirstOrderNode()->negation){
-            cout << "Child 1 opposite of 3" << " ";
+            cout << "Child 1 Opposite of Child 3 => Output:" << " ";
             // TODO: Need to figure out how to verify that child 2 is the parent of child 3... 
             
             // one and three are opposites; mainstatement should be equal to child 2 with an added negation
@@ -79,7 +79,7 @@ bool ProofChecker::isValid() const{
         }
         else{ // case where child 2 is opposite of child 3:
             // TODO: Need to figure out how to verify that child 1 is the parent of child 3... 
-            cout << "Child 2 opposite of 3" << " ";
+            cout << "Child 2 Opposite of Child 3 => Output:" << " ";
             // two and three are opposites; mainstatement should be equal to child 1 with an added negation
             if(child1.getHeadFirstOrderNode()->value.compare(mainStatement.getHeadFirstOrderNode()->value) && !child1.getHeadFirstOrderNode()->negation && mainStatement.getHeadFirstOrderNode()->negation){
                 return true;
