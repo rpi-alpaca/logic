@@ -43,6 +43,10 @@ void ProofChecker::addChild(const FirstOrderTree& child){
 	childStatements.push_back(FirstOrderTree(child));
 }
 
+void ProofChecker::printMainTree() const{
+    return mainStatement.printTree();
+}
+
 // This function provides the main functionality of the class.
 // It checks whether the main statement logically follows from the
 // child statements according to the justification.
@@ -132,23 +136,32 @@ bool ProofChecker::isValid() const{
         child2 = *itr;
         //Get Head of Main Statement:
         FirstOrderNode* root = mainStatement.getHeadFirstOrderNode();
+        FirstOrderNode* oneNode = child1.getHeadFirstOrderNode();
+        FirstOrderNode* twoNode = child2.getHeadFirstOrderNode();
+        string oneValue = oneNode->value;
+        bool oneNegation = oneNode->negation;
+        string twoValue = twoNode->value;
+        bool twoNegation = twoNode->negation;
+        cout << root->left->negation << " "; 
+        cout << root->right->negation << " ";
         //Check Root Left's Child Value == Child 1 Value
         //Case 1: Root Left Value != Child 1 Value
-        if(root->left->value != child1.getHeadFirstOrderNode()->value){
-            //Check Root Left's Child Value == Child 2 Value
-            //Subcase A: Not Equal => False
-            if(root->left->value != child2.getHeadFirstOrderNode()->value){
+        if(root->left->value == oneValue && root->left->negation == oneNegation){
+            //Equal => Return Root Right Value == Child 1 Value.
+            if(root->right->value == twoValue && root->right->negation == twoNegation){
+                return true;
+            }
+            return false;
+        }
+        else{
+            if(root->left->value == twoValue && root->left->negation == twoNegation){
+                if(root->right->value == oneValue && root->right->negation == oneNegation){
+                    cout << "2" << endl;
+                    return true;
+                }
                 return false;
             }
-            //Subcase B: Equal => Return Root Right Value == Child 1 Value.
-            else{
-                return root->right->value == child2.getHeadFirstOrderNode()->value; 
-            }
-        }
-        //Case 2: Root Left Value == Child 1 Value 
-        else{
-            //Return Root Right Value == Child 3 Value.
-            return root->right->value == child2.getHeadFirstOrderNode()->value;
+            return false;
         }
 
     }

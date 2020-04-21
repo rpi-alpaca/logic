@@ -10,7 +10,14 @@ int main(int argc, char* argv[]){
     expression.addChild(FirstOrderTree("A"));
     expression.addChild(FirstOrderTree("B"));
     expression.changeJustification("&I");
-    std::cout << "Result of AND Intro (A, B) => A & B: " << expression.isValid() << endl;
+    std::cout << "Result of AND Introduction Rule Test #1: " << expression.isValid() << endl;
+
+    expression = ProofChecker("~A & ~B");
+    expression.printMainTree();
+    expression.addChild(FirstOrderTree("A"));
+    expression.addChild(FirstOrderTree("B"));
+    expression.changeJustification("&I");
+    std::cout << "Result of AND Introduction Rule Test #2: " << expression.isValid() << endl;
 
     // Test AND Elim
     expression = ProofChecker("A");

@@ -15,8 +15,8 @@ public:
 	void changeJustification(const string& just);
 	void changeMainStatement(const string& mainStatementString);
 	void addChild(const FirstOrderTree& child);
-
 	bool isValid() const;
+	void printMainTree() const;
 	
 private:
 	FirstOrderTree mainStatement;
