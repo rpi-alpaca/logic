@@ -196,11 +196,11 @@ bool ProofChecker::isValid() const{
             return false;
         }
         // Get both sides of the operation
-        FirstOrderTree* first = new FirstOrderTree(conditional->getHeadFirstOrderNode()->left);
-        FirstOrderTree* second = new FirstOrderTree(conditional->getHeadFirstOrderNode()->right);
+        FirstOrderTree first(conditional->getHeadFirstOrderNode()->left);
+        FirstOrderTree second(conditional->getHeadFirstOrderNode()->right);
         // return true if child1 matches the left side and
         // the main statement matches the right side
-        if(first->getString() == antecedent->getString() && second->getString() == mainStatement.getString()){
+        if(first.getString() == antecedent->getString() && second.getString() == mainStatement.getString()){
             return true;
         }
         return false;
