@@ -37,11 +37,11 @@ int main(int argc, char* argv[]){
     // subproofs
 
     // Test IF Elim
-    expression = new ProofChecker("B");
-    expression->addChild(FirstOrderTree("A"));
-    expression->addChild(FirstOrderTree("A > B"));
-    expression->changeJustification(">E");
-    std::cout << "Result of IF Elim (A > B) => B: " << expression->isValid() << endl;
+    expression = ProofChecker("B");
+    expression.addChild(FirstOrderTree("A"));
+    expression.addChild(FirstOrderTree("A > B"));
+    expression.changeJustification(">E");
+    std::cout << "Result of IF Elim (A > B) => B: " << expression.isValid() << endl;
 
     // Test IFF Intro
     expression = ProofChecker("A = B");
