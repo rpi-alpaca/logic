@@ -182,8 +182,8 @@ bool ProofChecker::isValid() const{
         const FirstOrderTree& child1 = *(itr++);
         const FirstOrderTree& child2 = *(itr++);
         
-        const FirstOrderTree* conditional = NULL;
-        const FirstOrderTree* antecedent = NULL;
+        const FirstOrderTree* conditional = nullptr;
+        const FirstOrderTree* antecedent = nullptr;
         if(child1.getHeadFirstOrderNode()->opType == '>'){
             conditional = &child1;
             antecedent = &child2;
@@ -196,13 +196,17 @@ bool ProofChecker::isValid() const{
             return false;
         }
         // Get both sides of the operation
-        FirstOrderTree* first = new FirstOrderTree(conditional->getHeadFirstOrderNode()->left);
-        FirstOrderTree* second = new FirstOrderTree(conditional->getHeadFirstOrderNode()->right);
+        FirstOrderTree first(conditional->getHeadFirstOrderNode()->left);
+        FirstOrderTree second(conditional->getHeadFirstOrderNode()->right);
         // return true if child1 matches the left side and
         // the main statement matches the right side
-        if(first->getString() == antecedent->getString() && second->getString() == mainStatement.getString()){
+        if(first.getString() == antecedent->getString() && second.getString() == mainStatement.getString()){
+            //delete first;
+            //delete second;
             return true;
         }
+        //delete first;
+        //delete second;
         return false;
     }
 
