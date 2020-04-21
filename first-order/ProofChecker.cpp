@@ -201,12 +201,8 @@ bool ProofChecker::isValid() const{
         // return true if child1 matches the left side and
         // the main statement matches the right side
         if(first.getString() == antecedent->getString() && second.getString() == mainStatement.getString()){
-            //delete first;
-            //delete second;
             return true;
         }
-        //delete first;
-        //delete second;
         return false;
     }
 
