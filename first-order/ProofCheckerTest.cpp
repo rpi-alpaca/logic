@@ -67,10 +67,14 @@ int main(int argc, char* argv[]){
     // subproofs
 
     // Test IF Elim
-    expression = ProofChecker("A > B");
+    expression = ProofChecker("B");
     expression.addChild(FirstOrderTree("A"));
+    expression.addChild(FirstOrderTree("A > B"));
     expression.changeJustification(">E");
-    std::cout << "Result of expression Intro (A > B) => B: " << expression.isValid() << endl;
+    std::cout << "Result of IF Elim (A), (A > B) => B: " << expression.isValid() << endl;
+    expression.addChild(FirstOrderTree("A > B"));
+    expression.addChild(FirstOrderTree("A"));
+    std::cout << "Result of IF Elim (A > B), (A) => B: " << expression.isValid() << endl;
 
     // Test IFF Intro
     expression = ProofChecker("A = B");

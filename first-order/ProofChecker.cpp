@@ -192,9 +192,33 @@ bool ProofChecker::isValid() const{
 
     if(justification==">E"){
         // -> ELIM
-        FirstOrderTree child;
+        // assign child1 and child2 to the two statements starting the inference rule
         std::list<FirstOrderTree>::const_iterator itr = childStatements.begin();
-        child = *itr;
+        const FirstOrderTree& child1 = *(itr++);
+        const FirstOrderTree& child2 = *(itr++);
+        
+        const FirstOrderTree* conditional = nullptr;
+        const FirstOrderTree* antecedent = nullptr;
+        if(child1.getHeadFirstOrderNode()->opType == '>'){
+            conditional = &child1;
+            antecedent = &child2;
+        }
+        else if(child2.getHeadFirstOrderNode()->opType == '>'){
+            conditional = &child2;
+            antecedent = &child1;
+        }
+        else{
+            return false;
+        }
+        // Get both sides of the operation
+        FirstOrderTree first(conditional->getHeadFirstOrderNode()->left);
+        FirstOrderTree second(conditional->getHeadFirstOrderNode()->right);
+        // return true if child1 matches the left side and
+        // the main statement matches the right side
+        if(first.getString() == antecedent->getString() && second.getString() == mainStatement.getString()){
+            return true;
+        }
+        return false;
     }
 
     if(justification=="=I"){
