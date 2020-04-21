@@ -41,7 +41,10 @@ int main(int argc, char* argv[]){
     expression.addChild(FirstOrderTree("A"));
     expression.addChild(FirstOrderTree("A > B"));
     expression.changeJustification(">E");
-    std::cout << "Result of IF Elim (A > B) => B: " << expression.isValid() << endl;
+    std::cout << "Result of IF Elim (A), (A > B) => B: " << expression.isValid() << endl;
+    expression.addChild(FirstOrderTree("A > B"));
+    expression.addChild(FirstOrderTree("A"));
+    std::cout << "Result of IF Elim (A > B), (A) => B: " << expression.isValid() << endl;
 
     // Test IFF Intro
     expression = ProofChecker("A = B");

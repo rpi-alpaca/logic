@@ -131,28 +131,29 @@ bool ProofChecker::isValid() const{
         std::list<FirstOrderTree>::const_iterator itr = childStatements.begin();
         const FirstOrderTree& child1 = *(itr++);
         const FirstOrderTree& child2 = *(itr++);
-        // assume the child2 is the conditional being eliminted
-        // get both sides of the conditional
-        // If the head operator is not a conditional, return false
-        FirstOrderNode* head = child2.getHeadFirstOrderNode();
-
-        if(!(head->opType == '>')) {
+        
+        const FirstOrderTree* conditional = NULL;
+        const FirstOrderTree* antecedent = NULL;
+        if(child1.getHeadFirstOrderNode()->opType == '>'){
+            conditional = &child1;
+            antecedent = &child2;
+        }
+        else if(child2.getHeadFirstOrderNode()->opType == '>'){
+            conditional = &child2;
+            antecedent = &child1;
+        }
+        else{
             return false;
         }
-        // otherwise, get both sides of the operation
-        FirstOrderTree* first;
-        FirstOrderTree* second;
-        first = new FirstOrderTree(head->left);
-        second = new FirstOrderTree(head->right);
-
+        // Get both sides of the operation
+        FirstOrderTree* first = new FirstOrderTree(conditional->getHeadFirstOrderNode()->left);
+        FirstOrderTree* second = new FirstOrderTree(conditional->getHeadFirstOrderNode()->right);
         // return true if child1 matches the left side and
         // the main statement matches the right side
-        if(first->getString() == child1.getString() && second->getString() == mainStatement.getString())
+        if(first->getString() == antecedent->getString() && second->getString() == mainStatement.getString()){
             return true;
-        // If the child1 is not the left side of the operation and
-        // the main statement is not the right side of the operation, return false
-        //if(first)
-        // also later compare while assuming the child1 is the conditional being eliminated
+        }
+        return false;
     }
 
     if(justification=="=I"){
