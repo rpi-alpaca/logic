@@ -5,7 +5,11 @@
 using namespace std;
 
 int main(int argc, char* argv[]){
+    cout << "Start of ProofCheckerTest.cpp Testing Suite." << endl;
+    cout << endl;
     //Test Cases For AND Introduction Rule:
+    cout << "--------------------------------------------------------------------------------" << endl;
+    cout << endl;
     cout << "Test Suite For AND Introduction Rule: " << endl;
     ProofChecker expression = ProofChecker("A & B");
     expression.addChild(FirstOrderTree("A"));
@@ -46,24 +50,33 @@ int main(int argc, char* argv[]){
     cout << "Expected Output: 1" << endl;
     std::cout << "Result of AND Introduction Rule Test #5: " << expression.isValid() << endl;
     cout << endl;
+    cout << "--------------------------------------------------------------------------------" << endl;
+    cout << endl;
 
-    // Test AND Elim
+    //Test Cases For AND Elimination Rule:
+    cout << "Test Suite For AND Elimination Rule: " << endl;
     expression = ProofChecker("A");
     expression.addChild(FirstOrderTree("A & B"));
     expression.changeJustification("&E");
     std::cout << "Result of AND Eliminiation Rule Test #1: " << expression.isValid() << endl;
     cout << endl;
+    cout << "--------------------------------------------------------------------------------" << endl;
+    cout << endl;
 
-    // Test OR Intro
+    //Test Cases For OR Introduction Rule:
+    cout << "Test Suite For OR Introduction Rule: " << endl;
     expression = ProofChecker("A | B");
     expression.addChild(FirstOrderTree("A"));
     expression.changeJustification("|I");
     std::cout << "Result of OR Introduction Rule Test #1: " << expression.isValid() << endl;
     cout << endl;
+    cout << "--------------------------------------------------------------------------------" << endl;
+    cout << endl;
 
-    // OR Elim
+    //OR Elimination Rule == NOT YET IMPLEMENTED.
 
-    // Test NOT Intro
+    //Test Cases For NOT Introduction Rule:
+    cout << "Test Suite For NOT Introduction Rule: " << endl;
     expression = ProofChecker("~A");
     expression.addChild(FirstOrderTree("A"));
     expression.addChild(FirstOrderTree("B"));
@@ -79,8 +92,11 @@ int main(int argc, char* argv[]){
     expression.changeJustification("~I");
     std::cout << "Result of NOT Introduction Rule Test #2: " << expression.isValid() << endl;
     cout << endl;
+    cout << "--------------------------------------------------------------------------------" << endl;
+    cout << endl;
 
-    // Test NOT Elim
+    //Test Cases For NOT Elimination Rule: 
+    cout << "Test Suite For NOT Elimination Rule: " << endl;
     expression = ProofChecker("C");
     expression.addChild(FirstOrderTree("~C"));
     expression.addChild(FirstOrderTree("~B"));
@@ -96,11 +112,14 @@ int main(int argc, char* argv[]){
     expression.changeJustification("~E");
     std::cout << "Result of NOT Elimination Rule Test #2: " << expression.isValid() << endl;
     cout << endl;
+    cout << "--------------------------------------------------------------------------------" << endl;
+    cout << endl;
 
-    // IF Intro cannot be tested yet, as we have not figured out how to represent
-    // subproofs
+    //IF Introduction Rule cannot be tested yet, 
+    //  as we have not figured out how to represent subproofs.
 
-    // Test IF Elim
+    //Test Cases For IF Elimination Rule:
+    cout << "Test Suite For IF Elimination Rule: " << endl;
     expression = ProofChecker("B");
     expression.addChild(FirstOrderTree("A"));
     expression.addChild(FirstOrderTree("A > B"));
@@ -110,22 +129,31 @@ int main(int argc, char* argv[]){
     expression.addChild(FirstOrderTree("A"));
     std::cout << "Result of IF Elimination Rule Test #2: " << expression.isValid() << endl;
     cout << endl;
+    cout << "--------------------------------------------------------------------------------" << endl;
+    cout << endl;
 
-    // Test IFF Intro
+    //Test Cases For IFF Introduction Rule:
+    cout << "Test Suite For IFF Introduction Rule: " << endl;
     expression = ProofChecker("A = B");
     expression.addChild(FirstOrderTree("A > B"));
     expression.addChild(FirstOrderTree("B > A"));
     expression.changeJustification("=I");
     std::cout << "Result of IFF Introduction Rule Test #1: " << expression.isValid() << endl;
     cout << endl;
+    cout << "--------------------------------------------------------------------------------" << endl;
+    cout << endl;
 
-    // Test IFF Elim
+    //Test Cases For IFF Elimination Rule:
+    cout << "Test Suite For IFF Elimination Rule: " << endl;
     expression = ProofChecker("A");
     expression.addChild(FirstOrderTree("A = B"));
     expression.addChild(FirstOrderTree("=E"));
-    std::cout << "Result of IFF Introduction Rule Test #2: " << expression.isValid() << endl;
+    std::cout << "Result of IFF Elimination Rule Test #1: " << expression.isValid() << endl;
+    cout << endl;
+    cout << "--------------------------------------------------------------------------------" << endl;
     cout << endl;
 
+    cout << "Termination of ProofCheckTest.cpp Testing Suite." << endl;
     // Tests for quantifiers have not yet been written, as it has not been decided
     // what the symbols for forall expression exists will be; thus, writing tests for these
     // is impossible.

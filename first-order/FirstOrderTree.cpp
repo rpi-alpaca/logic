@@ -138,7 +138,7 @@ void FirstOrderTree::parseStatement(FirstOrderNode*& n, const std::string& state
 	ExpressionParser currentExpressionParser;
 	string currentOutput = currentExpressionParser.runShuntingYardAlgorithm(currentInput);
 	stack<FirstOrderNode*> convertToTree;
-	cout << "Output of Shunting-Yard Algorithm (Reverse Polish Notation) = " << currentOutput << endl;
+	//cout << "Output of Shunting-Yard Algorithm (Reverse Polish Notation) = " << currentOutput << endl;
 	//Case = Invalid Expression Communicated By Expression Parser.
 	if(currentOutput == "ERROR"){
 		return;
