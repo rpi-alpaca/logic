@@ -49,9 +49,10 @@ bool ProofChecker::isValid() const{
 
         // case where child 1 is opposite of child 3:
         if(child1.getHeadFirstOrderNode()->value.compare(child3.getHeadFirstOrderNode()->value) && child1.getHeadFirstOrderNode()->negation != child3.getHeadFirstOrderNode()->negation){
+            // TODO: Need to figure out how to verify that child 2 is the parent of child 3... 
+            
             // one and three are opposites; mainstatement should be equal to child 2 with an added negation
-
-            if(child2.getHeadFirstOrderNode()->value.compare(mainStatement.getHeadFirstOrderNode()->value) && child2.getHeadFirstOrderNode()->negation && !mainStatement.getHeadFirstOrderNode()->negation){
+            if(child2.getHeadFirstOrderNode()->value.compare(mainStatement.getHeadFirstOrderNode()->value) && !child2.getHeadFirstOrderNode()->negation && mainStatement.getHeadFirstOrderNode()->negation){
                 return true;
             }
             else{
@@ -59,8 +60,9 @@ bool ProofChecker::isValid() const{
             }
         }
         else{ // case where child 2 is opposite of child 3:
+            // TODO: Need to figure out how to verify that child 1 is the parent of child 3... 
             // two and three are opposites; mainstatement should be equal to child 1 with an added negation
-            if(child1.getHeadFirstOrderNode()->value.compare(mainStatement.getHeadFirstOrderNode()->value) && child1.getHeadFirstOrderNode()->negation && !mainStatement.getHeadFirstOrderNode()->negation){
+            if(child1.getHeadFirstOrderNode()->value.compare(mainStatement.getHeadFirstOrderNode()->value) && !child1.getHeadFirstOrderNode()->negation && mainStatement.getHeadFirstOrderNode()->negation){
                 return true;
             }
             else{
@@ -74,6 +76,36 @@ bool ProofChecker::isValid() const{
 	// NOT ELIM
 
     // If you have ~A, and from ~A you get B, and you have ~B, you can get A
+        std::list<FirstOrderTree>::const_iterator itr = childStatements.begin();
+        const FirstOrderTree& child1 = *(itr++);
+        const FirstOrderTree& child2 = *(itr++);
+        const FirstOrderTree& child3 = *(itr++);
+
+        // child 3 should be the exact opposite of either child 1 or child 2
+
+        // case where child 1 is opposite of child 3:
+        if(child1.getHeadFirstOrderNode()->value.compare(child3.getHeadFirstOrderNode()->value) && !child1.getHeadFirstOrderNode()->negation != !child3.getHeadFirstOrderNode()->negation){
+            // TODO: Need to figure out how to verify that child 2 is the parent of child 3... 
+            
+            // one and three are opposites; mainstatement should be equal to child 2 without its negation
+            if(child2.getHeadFirstOrderNode()->value.compare(mainStatement.getHeadFirstOrderNode()->value) && child2.getHeadFirstOrderNode()->negation && !mainStatement.getHeadFirstOrderNode()->negation){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        else{ // case where child 2 is opposite of child 3:
+            // TODO: Need to figure out how to verify that child 1 is the parent of child 3... 
+            // two and three are opposites; mainstatement should be equal to child 1 without its negation
+            if(child1.getHeadFirstOrderNode()->value.compare(mainStatement.getHeadFirstOrderNode()->value) && child1.getHeadFirstOrderNode()->negation && !mainStatement.getHeadFirstOrderNode()->negation){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        return false;
     }
 
     if(justification=="&I"){
