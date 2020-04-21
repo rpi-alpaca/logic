@@ -24,14 +24,33 @@ int main(int argc, char* argv[]){
     expression.changeJustification("|I");
     std::cout << "Result of OR Intro (A) => A | B: " << expression.isValid() << endl;
 
-    // OR Elim and NOT Intro cannot be tested yet, as we have not figured out how to represent
-    // subproofs
+    // OR Elim
+
+    // Test NOT Intro
+    expression = ProofChecker("A");
+    expression.addChild(FirstOrderTree("A"));
+    expression.addChild(FirstOrderTree("B"));
+    expression.addChild(FirstOrderTree("~B"));
+    std::cout << "Result of NOT Intro Test 1: " << expression.isValid() << endl;
+
+    expression = ProofChecker("A");
+    expression.addChild(FirstOrderTree("B"));
+    expression.addChild(FirstOrderTree("A"));
+    expression.addChild(FirstOrderTree("~B"));
+    std::cout << "Result of NOT Intro Test 2: " << expression.isValid() << endl;
 
     // Test NOT Elim
-    expression = ProofChecker("A");
-    expression.addChild(FirstOrderTree("~~A"));
-    expression.changeJustification("~E");
-    std::cout << "Result of expression Intro (~~A) => A: " << expression.isValid() << endl;
+    expression = ProofChecker("C");
+    expression.addChild(FirstOrderTree("~C"));
+    expression.addChild(FirstOrderTree("~B"));
+    expression.addChild(FirstOrderTree("B"));
+    std::cout << "Result of NOT Elim Test 1: " << expression.isValid() << endl;
+
+    expression = ProofChecker("C");
+    expression.addChild(FirstOrderTree("~B"));
+    expression.addChild(FirstOrderTree("~C"));
+    expression.addChild(FirstOrderTree("B"));
+    std::cout << "Result of NOT Elim Test 2: " << expression.isValid() << endl;
 
     // IF Intro cannot be tested yet, as we have not figured out how to represent
     // subproofs
