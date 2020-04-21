@@ -4,15 +4,23 @@
 
 using namespace std;
 
+// FirstOrderTree is the structure used for storing logical expressions in the first
+// order logic system. It is very similar to the original Tree structure, but it will
+// also eventually support statements with quanitifers. There are other modifications we
+// have made as well to support the type of operations required by ProofChecker.
+
+// Constructor; creates an empty tree
 FirstOrderTree::FirstOrderTree(){
 	head = new FirstOrderNode;
 	head->opType = 'v';
 }
 
+// Copy constructor
 FirstOrderTree::FirstOrderTree(const FirstOrderTree& s) {
 	head = copy_statement(s.head);
 }
 
+// Constructor which takes in two tree expressions and conjuncts them together
 FirstOrderTree::FirstOrderTree(const FirstOrderTree& s1, const FirstOrderTree& s2) {
 	head = new FirstOrderNode;
 	head->opType = '&';
@@ -20,6 +28,7 @@ FirstOrderTree::FirstOrderTree(const FirstOrderTree& s1, const FirstOrderTree& s
 	head->right = copy_statement(s2.head);
 }
 
+// Constructor to convert a string to a FirstOrderTree
 FirstOrderTree::FirstOrderTree(const std::string& statement){
 	//split it up
 	parseStatement(head, statement);
@@ -30,6 +39,7 @@ FirstOrderTree::FirstOrderTree(FirstOrderNode* s){
 	head = s;
 }
 
+// Modify the value at the head of the tree
 void FirstOrderTree::changeHeadValue(const std::string& statement) {
 	head->value = statement;
 }
@@ -56,12 +66,10 @@ void FirstOrderTree::printNode(FirstOrderNode* s) const {
 	}
 }
 
-
 //Returns Head Node of Tree For isValid() Determination In ProofChecker:
 FirstOrderNode* FirstOrderTree::getHeadFirstOrderNode() const {
 	return head;
 }
-
 
 //Returns the tree as a string in order
 std::string FirstOrderTree::getString() const {
@@ -205,6 +213,7 @@ void FirstOrderTree::parseStatement(FirstOrderNode*& n, const std::string& state
 	n = convertToTree.top();
 }
 
+// Helper function for garbage collection
 void FirstOrderTree::delete_helper(FirstOrderNode* s) {
 	if (!s)
 		return;
@@ -214,6 +223,7 @@ void FirstOrderTree::delete_helper(FirstOrderNode* s) {
 	delete s;
 }
 
+// Destructor for garbage collection of pointers
 FirstOrderTree::~FirstOrderTree() {
 	this->delete_helper(this->head);
 	this->head = nullptr;
