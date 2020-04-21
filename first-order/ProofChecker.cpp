@@ -3,6 +3,13 @@
 #include <iterator>
 using namespace std;
 
+// ProofChecker provides a way to create first order logic proofs in ALPACA.
+// mainStatement is the logical expression you are trying to prove (represented as a FirstOrderTree object).
+// mainStatement is supported by several children statements, stored in the childStatements array.
+// When the user provides a valid justification, ProofChecker checks whether mainStatement follows from 
+// the childStatements by the justification.
+
+
 // Default constructor
 ProofChecker::ProofChecker() {
 	mainStatement = FirstOrderTree();
@@ -15,10 +22,12 @@ ProofChecker::ProofChecker(const string& mainStatementString) {
 	justification = "Introduction";
 } 
 
+// Change the justification 
 void ProofChecker::changeJustification(const string& just) {
 	justification = just;
 } 
 
+// Modify the main statement
 void ProofChecker::changeMainStatement(const string& mainStatementString) {
 	// TODO: Is there a better way of doing this
 	// besides constructing an entirely new tree?
@@ -29,10 +38,14 @@ void ProofChecker::changeMainStatement(const string& mainStatementString) {
 	bool validity = isValid();
 }
 
+// This function adds child statements to support the main statement
 void ProofChecker::addChild(const FirstOrderTree& child){
 	childStatements.push_back(FirstOrderTree(child));
 }
 
+// This function provides the main functionality of the class.
+// It checks whether the main statement logically follows from the
+// child statements according to the justification.
 bool ProofChecker::isValid() const{
 	// TODO
 
