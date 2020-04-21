@@ -132,16 +132,22 @@ bool ProofChecker::isValid() const{
         child2 = *itr;
         //Get Head of Main Statement:
         FirstOrderNode* root = mainStatement.getHeadFirstOrderNode();
+        //Check Root Left's Child Value == Child 1 Value
+        //Case 1: Root Left Value != Child 1 Value
         if(root->left->value != child1.getHeadFirstOrderNode()->value){
-            //Case 1: 
+            //Check Root Left's Child Value == Child 2 Value
+            //Subcase A: Not Equal => False
             if(root->left->value != child2.getHeadFirstOrderNode()->value){
                 return false;
             }
+            //Subcase B: Equal => Return Root Right Value == Child 1 Value.
             else{
-                return root->right->value == child1.getHeadFirstOrderNode()->value; 
+                return root->right->value == child2.getHeadFirstOrderNode()->value; 
             }
         }
+        //Case 2: Root Left Value == Child 1 Value 
         else{
+            //Return Root Right Value == Child 3 Value.
             return root->right->value == child2.getHeadFirstOrderNode()->value;
         }
 
