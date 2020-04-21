@@ -27,16 +27,18 @@ int main(int argc, char* argv[]){
     // OR Elim
 
     // Test NOT Intro
-    expression = ProofChecker("A");
+    expression = ProofChecker("~A");
     expression.addChild(FirstOrderTree("A"));
     expression.addChild(FirstOrderTree("B"));
     expression.addChild(FirstOrderTree("~B"));
+    expression.changeJustification("~I");
     std::cout << "Result of NOT Intro Test 1: " << expression.isValid() << endl;
 
-    expression = ProofChecker("A");
+    expression = ProofChecker("~A");
     expression.addChild(FirstOrderTree("B"));
     expression.addChild(FirstOrderTree("A"));
     expression.addChild(FirstOrderTree("~B"));
+    expression.changeJustification("~I");
     std::cout << "Result of NOT Intro Test 2: " << expression.isValid() << endl;
 
     // Test NOT Elim
@@ -44,12 +46,14 @@ int main(int argc, char* argv[]){
     expression.addChild(FirstOrderTree("~C"));
     expression.addChild(FirstOrderTree("~B"));
     expression.addChild(FirstOrderTree("B"));
+    expression.changeJustification("~E");
     std::cout << "Result of NOT Elim Test 1: " << expression.isValid() << endl;
 
     expression = ProofChecker("C");
     expression.addChild(FirstOrderTree("~B"));
     expression.addChild(FirstOrderTree("~C"));
     expression.addChild(FirstOrderTree("B"));
+    expression.changeJustification("~E");
     std::cout << "Result of NOT Elim Test 2: " << expression.isValid() << endl;
 
     // IF Intro cannot be tested yet, as we have not figured out how to represent
