@@ -50,6 +50,39 @@ int main(int argc, char* argv[]){
     cout << "Expected Output: 1" << endl;
     std::cout << "Result of AND Introduction Rule Test #5: " << expression.isValid() << endl;
     cout << endl;
+
+    expression = ProofChecker("(A & B) & (C & D)");
+    expression.addChild(FirstOrderTree("(A & B)"));
+    expression.addChild(FirstOrderTree("(C & D)"));
+    expression.changeJustification("&I");
+    cout << "Expected Output: 1" << endl;
+    std::cout << "Result of AND Introduction Rule Test #6: " << expression.isValid() << endl;
+    cout << endl;
+
+    expression = ProofChecker("(A & B) & (C | D)");
+    expression.addChild(FirstOrderTree("(A & B)"));
+    expression.addChild(FirstOrderTree("(C | D)"));
+    expression.changeJustification("&I");
+    cout << "Expected Output: 1" << endl;
+    std::cout << "Result of AND Introduction Rule Test #7: " << expression.isValid() << endl;
+    cout << endl;
+
+    expression = ProofChecker("(A = (B > ~D)) & (C | D)");
+    expression.addChild(FirstOrderTree("(A = (B > ~D))"));
+    expression.addChild(FirstOrderTree("(C | D)"));
+    expression.changeJustification("&I");
+    cout << "Expected Output: 1" << endl;
+    std::cout << "Result of AND Introduction Rule Test #8: " << expression.isValid() << endl;
+    cout << endl;
+
+    expression = ProofChecker("(A & B) | (C & D)");
+    expression.addChild(FirstOrderTree("(A & B)"));
+    expression.addChild(FirstOrderTree("(C & D)"));
+    expression.changeJustification("&I");
+    cout << "Expected Output: 0" << endl;
+    std::cout << "Result of AND Introduction Rule Test #9: " << expression.isValid() << endl;
+    cout << endl;
+
     cout << "--------------------------------------------------------------------------------" << endl;
     cout << endl;
 

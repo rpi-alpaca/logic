@@ -9,6 +9,7 @@ using namespace std;
 // When the user provides a valid justification, ProofChecker checks whether mainStatement follows from 
 // the childStatements by the justification.
 
+bool isSubtreeSame(FirstOrderNode* root, FirstOrderNode* same);
 
 // Default constructor
 ProofChecker::ProofChecker() {
@@ -128,7 +129,7 @@ bool ProofChecker::isValid() const{
     }
 
     if(justification=="&I"){
-        //AND Introduction:
+        //AND Introduction Rule:
         FirstOrderTree child1;
         FirstOrderTree child2;
         //Start At Begininng of Children Statements:
@@ -140,23 +141,25 @@ bool ProofChecker::isValid() const{
         FirstOrderNode* root = mainStatement.getHeadFirstOrderNode();
         FirstOrderNode* oneNode = child1.getHeadFirstOrderNode();
         FirstOrderNode* twoNode = child2.getHeadFirstOrderNode();
-        string oneValue = oneNode->value;
-        bool oneNegation = oneNode->negation;
-        string twoValue = twoNode->value;
-        bool twoNegation = twoNode->negation;
+
+        if(root == NULL){
+            return false;
+        }
+        if(root->value != "&"){
+            return false;
+        }
         //Check Root Left's Child Value == Child 1 Value
         //Case 1: Root Left Value != Child 1 Value
-        if(root->left->value == oneValue && root->left->negation == oneNegation){
+        if(isSubtreeSame(root->left, oneNode)){
             //Equal => Return Root Right Value == Child 1 Value.
-            if(root->right->value == twoValue && root->right->negation == twoNegation){
+            if(isSubtreeSame(root->right, twoNode)){
                 return true;
             }
             return false;
         }
         else{
-            if(root->left->value == twoValue && root->left->negation == twoNegation){
-                if(root->right->value == oneValue && root->right->negation == oneNegation){
-                    cout << "2" << endl;
+            if(isSubtreeSame(root->left, twoNode)){
+                if(isSubtreeSame(root->right, twoNode)){
                     return true;
                 }
                 return false;
@@ -239,5 +242,20 @@ bool ProofChecker::isValid() const{
         child2 = *itr;
     }
 	return false; 
+
+}
+
+//Private Helper Function:
+bool isSubtreeSame(FirstOrderNode* root, FirstOrderNode* same){
+    if(!root && !same){
+        return true;
+    }
+    else if((!root && same) || (root && !same)){
+        return false;
+    }
+    if(root->value != same->value || root->negation != same->negation){
+        return false;
+    }
+    return isSubtreeSame(root->left, same->left) && isSubtreeSame(root->right, same->right);
 
 }
