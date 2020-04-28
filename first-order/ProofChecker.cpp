@@ -142,23 +142,28 @@ bool ProofChecker::isValid() const{
         FirstOrderNode* oneNode = child1.getHeadFirstOrderNode();
         FirstOrderNode* twoNode = child2.getHeadFirstOrderNode();
 
+        //If Root NULL, Cannot Be Valid.
         if(root == NULL){
             return false;
         }
+
+        //Assert Dealing w/ AND Node.
         if(root->value != "&"){
             return false;
         }
-        //Check Root Left's Child Value == Child 1 Value
-        //Case 1: Root Left Value != Child 1 Value
+        //Check Root Left Subtree == Child One Subtree.
+        //Case 1: Check Root Left Subtree == Child One Subtree.
         if(isSubtreeSame(root->left, oneNode)){
-            //Equal => Return Root Right Value == Child 1 Value.
+            //Equal => Return Root Right Subtree == Child One Subtree.
             if(isSubtreeSame(root->right, twoNode)){
                 return true;
             }
             return false;
         }
         else{
+            //Case 2: Check Root Right Subtree == Child Two Subtree.
             if(isSubtreeSame(root->left, twoNode)){
+                //Equal => Return Root Right Subtree == Child One Subtree.
                 if(isSubtreeSame(root->right, oneNode)){
                     return true;
                 }
