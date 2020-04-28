@@ -256,16 +256,23 @@ bool ProofChecker::isValid() const{
 }
 
 //Private Helper Function:
+//Invoked By AND Introduction Rule:
+//Basic Implementation of Comparing Two Trees w/ Same Tree Values:
 bool isSubtreeSame(FirstOrderNode* root, FirstOrderNode* same){
+    //Base True Case:
     if(!root && !same){
         return true;
     }
+    //Base False Case:
     else if((!root && same) || (root && !same)){
         return false;
     }
+    //Check Current Values Are Same. 
+    //If Not, Return False.
     if(root->value != same->value || root->negation != same->negation){
         return false;
     }
+    //Recursive Step.
     return isSubtreeSame(root->left, same->left) && isSubtreeSame(root->right, same->right);
 
 }
