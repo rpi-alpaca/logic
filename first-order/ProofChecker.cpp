@@ -159,7 +159,7 @@ bool ProofChecker::isValid() const{
         }
         else{
             if(isSubtreeSame(root->left, twoNode)){
-                if(isSubtreeSame(root->right, twoNode)){
+                if(isSubtreeSame(root->right, oneNode)){
                     return true;
                 }
                 return false;
