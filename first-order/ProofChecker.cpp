@@ -142,6 +142,11 @@ bool ProofChecker::isValid() const{
         FirstOrderNode* oneNode = child1.getHeadFirstOrderNode();
         FirstOrderNode* twoNode = child2.getHeadFirstOrderNode();
 
+        //By Our Definition, AND Introduction Rule, If More Than 2 Children, Return False.
+        if(childStatements.size() > 2){
+            return false;
+        }
+
         //If Root NULL, Cannot Be Valid.
         if(root == NULL){
             return false;
