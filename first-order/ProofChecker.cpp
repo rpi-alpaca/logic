@@ -148,7 +148,7 @@ bool ProofChecker::isValid() const{
         }
 
         //If Root NULL, Cannot Be Valid.
-        if(root == NULL){
+        if(!root){
             return false;
         }
 
@@ -182,10 +182,40 @@ bool ProofChecker::isValid() const{
 
     if(justification=="&E"){
         //And Elimination Rule:
-        FirstOrderTree singleChild;
+        FirstOrderTree child;
         std::list<FirstOrderTree>::const_iterator itr = childStatements.begin();
-        singleChild = *itr;
+        child = *itr;
+        //Obtain Appropriate FirstOrderNodes From FirstOrderTrees.
+        FirstOrderNode* root = mainStatement.getHeadFirstOrderNode();
+        FirstOrderNode* childNode = child.getHeadFirstOrderNode();
 
+        if(childStatements.size() != 1){
+            return false;
+        }  
+
+        //Child Is Ideally An AND Node. 
+        //Parent Root Should Be A Subset of AND Node.
+        //If Either Are NULL Must Return False.
+        if(!root || !childNode){
+            return false;
+        }
+
+        //Child Statement Must Be AND.
+        if(childNode->value != "&"){
+            return false;
+        }
+
+        //Case 1: AND Elimination Performed On Left Part of AND/Conjunction.
+        if(isSubtreeSame(root, childNode->left)){
+            return true;
+        }
+        else{ 
+            //AND Elimination Performed On Right Part of AND/Conjunction.
+            if(isSubtreeSame(root, childNode->right)){
+                return true;
+            }
+            return false;
+        }
     }
 
     if(justification=="|I"){
@@ -202,7 +232,7 @@ bool ProofChecker::isValid() const{
         }
 
         //If Root NULL, Cannot Be Valid.
-        if(root == NULL){
+        if(!root){
             return false;
         }
 
