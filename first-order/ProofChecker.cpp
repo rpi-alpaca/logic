@@ -156,6 +156,7 @@ bool ProofChecker::isValid() const{
         if(root->value != "&"){
             return false;
         }
+
         //Check Root Left Subtree == Child One Subtree.
         //Case 1: Check Root Left Subtree == Child One Subtree.
         if(isSubtreeSame(root->left, oneNode)){
@@ -180,20 +181,36 @@ bool ProofChecker::isValid() const{
     }
 
     if(justification=="&E"){
-        // AND ELIM
-        FirstOrderTree child;
+        //And Elimination Rule:
+        FirstOrderTree singleChild;
         std::list<FirstOrderTree>::const_iterator itr = childStatements.begin();
-        child = *itr;
+        singleChild = *itr;
+
     }
 
     if(justification=="|I"){
-        // OR INTRO
+        //OR Introduction Rule:
         FirstOrderTree child;
         std::list<FirstOrderTree>::const_iterator itr = childStatements.begin();
         child = *itr;
         FirstOrderNode* root = mainStatement.getHeadFirstOrderNode();
         FirstOrderNode* childNode = child.getHeadFirstOrderNode();
 
+        //By Our Definition, OR Introduction Rule, If Not Exactly 1 Child, Return False.
+        if(childStatements.size() != 1){
+            return false;
+        }
+
+        //If Root NULL, Cannot Be Valid.
+        if(root == NULL){
+            return false;
+        }
+
+        //Assert Dealing w/ OR Node.
+        if(root->value != "|"){
+            return false;
+        }
+        
         if(isSubtreeSame(root->left, childNode)){
             //Case 1: Root Left Subtree == Child Subtree.
             return true;
