@@ -148,7 +148,7 @@ bool ProofChecker::isValid() const{
         }
 
         //If Root NULL, Cannot Be Valid.
-        if(root == NULL){
+        if(!root){
             return false;
         }
 
@@ -156,6 +156,7 @@ bool ProofChecker::isValid() const{
         if(root->value != "&"){
             return false;
         }
+
         //Check Root Left Subtree == Child One Subtree.
         //Case 1: Check Root Left Subtree == Child One Subtree.
         if(isSubtreeSame(root->left, oneNode)){
@@ -180,20 +181,66 @@ bool ProofChecker::isValid() const{
     }
 
     if(justification=="&E"){
-        // AND ELIM
+        //And Elimination Rule:
         FirstOrderTree child;
         std::list<FirstOrderTree>::const_iterator itr = childStatements.begin();
         child = *itr;
+        //Obtain Appropriate FirstOrderNodes From FirstOrderTrees.
+        FirstOrderNode* root = mainStatement.getHeadFirstOrderNode();
+        FirstOrderNode* childNode = child.getHeadFirstOrderNode();
+
+        if(childStatements.size() != 1){
+            return false;
+        }  
+
+        //Child Is Ideally An AND Node. 
+        //Parent Root Should Be A Subset of AND Node.
+        //If Either Are NULL Must Return False.
+        if(!root || !childNode){
+            return false;
+        }
+
+        //Child Statement Must Be AND.
+        if(childNode->value != "&"){
+            return false;
+        }
+
+        //Case 1: AND Elimination Performed On Left Part of AND/Conjunction.
+        if(isSubtreeSame(root, childNode->left)){
+            return true;
+        }
+        else{ 
+            //AND Elimination Performed On Right Part of AND/Conjunction.
+            if(isSubtreeSame(root, childNode->right)){
+                return true;
+            }
+            return false;
+        }
     }
 
     if(justification=="|I"){
-        // OR INTRO
+        //OR Introduction Rule:
         FirstOrderTree child;
         std::list<FirstOrderTree>::const_iterator itr = childStatements.begin();
         child = *itr;
         FirstOrderNode* root = mainStatement.getHeadFirstOrderNode();
         FirstOrderNode* childNode = child.getHeadFirstOrderNode();
 
+        //By Our Definition, OR Introduction Rule, If Not Exactly 1 Child, Return False.
+        if(childStatements.size() != 1){
+            return false;
+        }
+
+        //If Root NULL, Cannot Be Valid.
+        if(!root){
+            return false;
+        }
+
+        //Assert Dealing w/ OR Node.
+        if(root->value != "|"){
+            return false;
+        }
+        
         if(isSubtreeSame(root->left, childNode)){
             //Case 1: Root Left Subtree == Child Subtree.
             return true;
