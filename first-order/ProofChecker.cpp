@@ -198,7 +198,7 @@ bool ProofChecker::isValid() const{
             //Case 1: Root Left Subtree == Child Subtree.
             return true;
         }
-        else{
+        else if (isSubtreeSame(root->right, childNode)){
             //Case 2: Root Right Subtree == Child Subtree.
             return true;
         }
@@ -262,6 +262,19 @@ bool ProofChecker::isValid() const{
         child1 = *itr;
         itr++;
         child2 = *itr;
+        FirstOrderNode* root = mainStatement.getHeadFirstOrderNode();
+        FirstOrderNode* oneNode = child1.getHeadFirstOrderNode();
+        FirstOrderNode* twoNode = child2.getHeadFirstOrderNode();
+
+        if(isSubtreeSame(root->left, oneNode)){
+            //Case 1: Root Left Subtree == Child Subtree.
+            return true;
+        }
+        else{
+            //Case 2: Root Right Subtree == Child Subtree.
+            return true;
+        }
+        return false;
     }
 	return false; 
 
