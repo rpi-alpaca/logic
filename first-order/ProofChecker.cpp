@@ -191,6 +191,18 @@ bool ProofChecker::isValid() const{
         FirstOrderTree child;
         std::list<FirstOrderTree>::const_iterator itr = childStatements.begin();
         child = *itr;
+        FirstOrderNode* root = mainStatement.getHeadFirstOrderNode();
+        FirstOrderNode* childNode = child.getHeadFirstOrderNode();
+
+        if(isSubtreeSame(root->left, childNode)){
+            //Case 1: Root Left Subtree == Child Subtree.
+            return true;
+        }
+        else{
+            //Case 2: Root Right Subtree == Child Subtree.
+            return true;
+        }
+        return false;
     }
 
     if(justification=="|E"){
