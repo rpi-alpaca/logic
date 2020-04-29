@@ -16,7 +16,7 @@ int main(int argc, char* argv[]){
     expression.addChild(FirstOrderTree("B"));
     expression.changeJustification("&I");
     cout << "Expected Output: 1" << endl;
-    std::cout << "Result of AND Introduction Rule Test #1A: " << expression.isValid() << endl;
+    cout << "Result of AND Introduction Rule Test #1A: " << expression.isValid() << endl;
     cout << endl;
 
     expression = ProofChecker("A & B");
@@ -24,7 +24,7 @@ int main(int argc, char* argv[]){
     expression.addChild(FirstOrderTree("A"));
     expression.changeJustification("&I");
     cout << "Expected Output: 1" << endl;
-    std::cout << "Result of AND Introduction Rule Test #1B: " << expression.isValid() << endl;
+    cout << "Result of AND Introduction Rule Test #1B: " << expression.isValid() << endl;
     cout << endl;
 
     expression = ProofChecker("~A & ~B");
@@ -32,7 +32,7 @@ int main(int argc, char* argv[]){
     expression.addChild(FirstOrderTree("B"));
     expression.changeJustification("&I");
     cout << "Expected Output: 0" << endl;
-    std::cout << "Result of AND Introduction Rule Test #2: " << expression.isValid() << endl;
+    cout << "Result of AND Introduction Rule Test #2: " << expression.isValid() << endl;
     cout << endl;
 
     expression = ProofChecker("~A & ~B");
@@ -40,7 +40,7 @@ int main(int argc, char* argv[]){
     expression.addChild(FirstOrderTree("~B"));
     expression.changeJustification("&I");
     cout << "Expected Output: 1" << endl;
-    std::cout << "Result of AND Introduction Rule Test #3: " << expression.isValid() << endl;
+    cout << "Result of AND Introduction Rule Test #3: " << expression.isValid() << endl;
     cout << endl;
 
     expression = ProofChecker("~A & ~A");
@@ -48,7 +48,7 @@ int main(int argc, char* argv[]){
     expression.addChild(FirstOrderTree("~A"));
     expression.changeJustification("&I");
     cout << "Expected Output: 1" << endl;
-    std::cout << "Result of AND Introduction Rule Test #4: " << expression.isValid() << endl;
+    cout << "Result of AND Introduction Rule Test #4: " << expression.isValid() << endl;
     cout << endl;
 
     expression = ProofChecker("~A & A");
@@ -56,7 +56,7 @@ int main(int argc, char* argv[]){
     expression.addChild(FirstOrderTree("A"));
     expression.changeJustification("&I");
     cout << "Expected Output: 1" << endl;
-    std::cout << "Result of AND Introduction Rule Test #5: " << expression.isValid() << endl;
+    cout << "Result of AND Introduction Rule Test #5: " << expression.isValid() << endl;
     cout << endl;
 
     expression = ProofChecker("(A & B) & (C & D)");
@@ -64,7 +64,7 @@ int main(int argc, char* argv[]){
     expression.addChild(FirstOrderTree("(C & D)"));
     expression.changeJustification("&I");
     cout << "Expected Output: 1" << endl;
-    std::cout << "Result of AND Introduction Rule Test #6: " << expression.isValid() << endl;
+    cout << "Result of AND Introduction Rule Test #6: " << expression.isValid() << endl;
     cout << endl;
 
     expression = ProofChecker("(A & B) & (C | D)");
@@ -72,7 +72,7 @@ int main(int argc, char* argv[]){
     expression.addChild(FirstOrderTree("(C | D)"));
     expression.changeJustification("&I");
     cout << "Expected Output: 1" << endl;
-    std::cout << "Result of AND Introduction Rule Test #7: " << expression.isValid() << endl;
+    cout << "Result of AND Introduction Rule Test #7: " << expression.isValid() << endl;
     cout << endl;
 
     expression = ProofChecker("(A = (B > ~D)) & (C | D)");
@@ -80,7 +80,7 @@ int main(int argc, char* argv[]){
     expression.addChild(FirstOrderTree("(C | D)"));
     expression.changeJustification("&I");
     cout << "Expected Output: 1" << endl;
-    std::cout << "Result of AND Introduction Rule Test #8: " << expression.isValid() << endl;
+    cout << "Result of AND Introduction Rule Test #8: " << expression.isValid() << endl;
     cout << endl;
 
     expression = ProofChecker("(A & B) | (C & D)");
@@ -88,7 +88,7 @@ int main(int argc, char* argv[]){
     expression.addChild(FirstOrderTree("(C & D)"));
     expression.changeJustification("&I");
     cout << "Expected Output: 0" << endl;
-    std::cout << "Result of AND Introduction Rule Test #9: " << expression.isValid() << endl;
+    cout << "Result of AND Introduction Rule Test #9: " << expression.isValid() << endl;
     cout << endl;
 
     cout << "--------------------------------------------------------------------------------" << endl;
@@ -99,8 +99,38 @@ int main(int argc, char* argv[]){
     expression = ProofChecker("A");
     expression.addChild(FirstOrderTree("A & B"));
     expression.changeJustification("&E");
-    std::cout << "Result of AND Eliminiation Rule Test #1: " << expression.isValid() << endl;
+    cout << "Expected Output: 1" << endl;
+    cout << "Result of AND Eliminiation Rule Test #1: " << expression.isValid() << endl;
     cout << endl;
+
+    expression = ProofChecker("B & C");
+    expression.addChild(FirstOrderTree("A & (B & C)"));
+    expression.changeJustification("&E");
+    cout << "Expected Output: 1" << endl;
+    cout << "Result of AND Eliminiation Rule Test #2: " << expression.isValid() << endl;
+    cout << endl;
+
+    expression = ProofChecker("(A = ~D)");
+    expression.addChild(FirstOrderTree("(A = ~D) & (B & C)"));
+    expression.changeJustification("&E");
+    cout << "Expected Output: 1" << endl;
+    cout << "Result of AND Eliminiation Rule Test #3: " << expression.isValid() << endl;
+    cout << endl;
+
+    expression = ProofChecker("~A");
+    expression.addChild(FirstOrderTree("A & (B & C)"));
+    expression.changeJustification("&E");
+    cout << "Expected Output: 0" << endl;
+    cout << "Result of AND Eliminiation Rule Test #4: " << expression.isValid() << endl;
+    cout << endl;
+
+    expression = ProofChecker("~(A | ~B)");
+    expression.addChild(FirstOrderTree("~(A | ~B) & (B & C)"));
+    expression.changeJustification("&E");
+    cout << "Expected Output: 1" << endl;
+    cout << "Result of AND Eliminiation Rule Test #5: " << expression.isValid() << endl;
+    cout << endl;
+
     cout << "--------------------------------------------------------------------------------" << endl;
     cout << endl;
 
@@ -109,7 +139,7 @@ int main(int argc, char* argv[]){
     expression = ProofChecker("A | B");
     expression.addChild(FirstOrderTree("A"));
     expression.changeJustification("|I");
-    std::cout << "Result of OR Introduction Rule Test #1: " << expression.isValid() << endl;
+    cout << "Result of OR Introduction Rule Test #1: " << expression.isValid() << endl;
     cout << endl;
     cout << "--------------------------------------------------------------------------------" << endl;
     cout << endl;
@@ -123,7 +153,7 @@ int main(int argc, char* argv[]){
     expression.addChild(FirstOrderTree("B"));
     expression.addChild(FirstOrderTree("~B"));
     expression.changeJustification("~I");
-    std::cout << "Result of NOT Introduction Rule Test #1: " << expression.isValid() << endl;
+    cout << "Result of NOT Introduction Rule Test #1: " << expression.isValid() << endl;
     cout << endl;
 
     expression = ProofChecker("~A");
@@ -131,7 +161,7 @@ int main(int argc, char* argv[]){
     expression.addChild(FirstOrderTree("A"));
     expression.addChild(FirstOrderTree("~B"));
     expression.changeJustification("~I");
-    std::cout << "Result of NOT Introduction Rule Test #2: " << expression.isValid() << endl;
+    cout << "Result of NOT Introduction Rule Test #2: " << expression.isValid() << endl;
     cout << endl;
     cout << "--------------------------------------------------------------------------------" << endl;
     cout << endl;
@@ -143,7 +173,7 @@ int main(int argc, char* argv[]){
     expression.addChild(FirstOrderTree("~B"));
     expression.addChild(FirstOrderTree("B"));
     expression.changeJustification("~E");
-    std::cout << "Result of NOT Elimination Rule Test #1: " << expression.isValid() << endl;
+    cout << "Result of NOT Elimination Rule Test #1: " << expression.isValid() << endl;
     cout << endl;
 
     expression = ProofChecker("C");
@@ -151,7 +181,7 @@ int main(int argc, char* argv[]){
     expression.addChild(FirstOrderTree("~C"));
     expression.addChild(FirstOrderTree("B"));
     expression.changeJustification("~E");
-    std::cout << "Result of NOT Elimination Rule Test #2: " << expression.isValid() << endl;
+    cout << "Result of NOT Elimination Rule Test #2: " << expression.isValid() << endl;
     cout << endl;
     cout << "--------------------------------------------------------------------------------" << endl;
     cout << endl;
@@ -165,10 +195,10 @@ int main(int argc, char* argv[]){
     expression.addChild(FirstOrderTree("A"));
     expression.addChild(FirstOrderTree("A > B"));
     expression.changeJustification(">E");
-    std::cout << "Result of IF Elimination Rule Test #1: " << expression.isValid() << endl;
+    cout << "Result of IF Elimination Rule Test #1: " << expression.isValid() << endl;
     expression.addChild(FirstOrderTree("A > B"));
     expression.addChild(FirstOrderTree("A"));
-    std::cout << "Result of IF Elimination Rule Test #2: " << expression.isValid() << endl;
+    cout << "Result of IF Elimination Rule Test #2: " << expression.isValid() << endl;
     cout << endl;
     cout << "--------------------------------------------------------------------------------" << endl;
     cout << endl;
@@ -179,7 +209,7 @@ int main(int argc, char* argv[]){
     expression.addChild(FirstOrderTree("A > B"));
     expression.addChild(FirstOrderTree("B > A"));
     expression.changeJustification("=I");
-    std::cout << "Result of IFF Introduction Rule Test #1: " << expression.isValid() << endl;
+    cout << "Result of IFF Introduction Rule Test #1: " << expression.isValid() << endl;
     cout << endl;
     cout << "--------------------------------------------------------------------------------" << endl;
     cout << endl;
@@ -190,7 +220,7 @@ int main(int argc, char* argv[]){
     expression.addChild(FirstOrderTree("A = B"));
     expression.addChild(FirstOrderTree("B"));
     expression.changeJustification("=E");
-    std::cout << "Result of IFF Elimination Rule Test #1: " << expression.isValid() << endl;
+    cout << "Result of IFF Elimination Rule Test #1: " << expression.isValid() << endl;
     cout << endl;
     cout << "--------------------------------------------------------------------------------" << endl;
     cout << endl;
