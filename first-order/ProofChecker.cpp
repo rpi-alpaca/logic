@@ -266,18 +266,42 @@ bool ProofChecker::isValid() const{
         FirstOrderNode* oneNode = child1.getHeadFirstOrderNode();
         FirstOrderNode* twoNode = child2.getHeadFirstOrderNode();
 
-        if(isSubtreeSame(root->left, oneNode)){
-            //Case 1: Root Left Subtree == Child Subtree.
-            return true;
+        // Case 1: oneNode is the biconditional
+        if(oneNode->opType == '='){
+             if(isSubtreeSame(oneNode->left, twoNode)){
+                //Case 1: Biconditional's Left Subtree == Other Child's Subtree.
+                if(isSubtreeSame(oneNode->right, root))
+                    return true;
+            }
+            else if (isSubtreeSame(oneNode->right, twoNode)){
+                //Case 2: Root Right Subtree == Child Subtree.
+                if(isSubtreeSame(oneNode->left, root))
+                    return true;
+            }
+            return false;
         }
-        else{
-            //Case 2: Root Right Subtree == Child Subtree.
-            return true;
+        // Case 2: twoNode is the biconditional
+        else if(twoNode->opType == '='){
+             if(isSubtreeSame(twoNode->left, oneNode)){
+                //Case 1: Biconditional's Left Subtree == Other Child's Subtree.
+                if(isSubtreeSame(twoNode->right, root))
+                    return true;
+            }
+            else if (isSubtreeSame(twoNode->right, oneNode)){
+                //Case 2: Root Right Subtree == Child Subtree.
+                if(isSubtreeSame(twoNode->left, root))
+                    return true;
+            }
+            return false;
         }
         return false;
     }
-	return false; 
 
+
+
+
+
+	return false; 
 }
 
 //Private Helper Function:

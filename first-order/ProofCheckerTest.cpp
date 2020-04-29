@@ -188,7 +188,8 @@ int main(int argc, char* argv[]){
     cout << "Test Suite For IFF Elimination Rule: " << endl;
     expression = ProofChecker("A");
     expression.addChild(FirstOrderTree("A = B"));
-    expression.addChild(FirstOrderTree("=E"));
+    expression.addChild(FirstOrderTree("B"));
+    expression.changeJustification("=E");
     std::cout << "Result of IFF Elimination Rule Test #1: " << expression.isValid() << endl;
     cout << endl;
     cout << "--------------------------------------------------------------------------------" << endl;
